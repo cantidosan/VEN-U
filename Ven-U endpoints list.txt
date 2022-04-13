@@ -1,0 +1,294 @@
+
+VEN-U- API ROUTES
+
+
+VENUE- Everything about Venues
+delete / venues
+post /venues
+get /venues
+patch / venues
+
+
+Everything about a particular venue
+
+post /venues/venue_id
+get / venues/venue_id
+patch / venues/venue_id
+delete /venues/venue_id
+
+users- Everything about users
+
+get /users
+post /users
+patch /users
+delete /users
+
+users - Everything about a particular User
+
+get /users/userId
+post /users/userId
+patch /users/userId
+delete /users/userId
+
+events - everything about events
+
+get /events/
+get /events/
+get /events/
+get /events/
+
+
+events - Everything about a particular event
+
+get /events/eventId
+patch /events/eventId
+delete /events/eventId
+post /events/eventId
+
+
+VENDOR - Everything about vendors
+
+get /vendors
+patch /vendors
+put /vendors
+delete /vendors
+
+Vendor - Everything about a particular vendors
+
+get /vendors/vendorId
+patch /vendors/vendorId
+put /vendors/vendorId
+delete /vendors/vendorId
+
+
+Customer- Everything about customers
+
+get /customers
+put /customers
+patch /customers
+delete /customers
+
+
+Customer - Everything about a particular customer
+
+get /customers/customerId
+put /customers/customerId
+patch /customers/customerId
+delete /customers/customerId
+
+ACTUAL
+API
+ROUTES
+
+
+HOME PAGE
+
+	/login
+	/singup
+
+LOGIN PAGE
+
+	auth endpoints
+ 
+HOST VENUE LIST PAGE
+ 
+	 get/venues
+	 get/users
+	 /logout(look into this )
+ 
+ HOST VENUE DETAILS PAGE
+	get/venues/venue_id
+	get/events/eventId
+	get/events/venueId
+	/logout(look into this )
+	
+HOST REVIEW EVENT DETAILS PAGE
+	get/events/venueId
+	get/events/eventId
+	delete/events/venueId
+	patch/events/eventId
+	
+HOST EDIT VENUE DETTAILS PAGE
+	/logout(look into this )
+	post/cloudinary
+	delete/cloudinary
+	patch /venues
+	
+HOST CREATE VENUE PAGE
+	/logout(look  into this)
+	post/cloudinary
+	post/venues
+	
+	
+BOOKEE VIEW EVENT DETAILS PAGE
+	/logout(look  into this)
+	get/events/eventId
+	
+BOOKEE EDIT EVENT DETAILS PAGE
+
+	/logout
+	post/cloudinary
+	delete/cloudinary
+	patch/events/eventId
+	
+	
+CUSTOEMR VIEW EVENT DETAILS PAGE
+
+	/logout
+	/post/paypayl/stripeMockup
+	
+
+
+PAGENAME/URLS
+<ROUTE AUTHORIZED>
+	<BUTTON ROLES ACCESS>
+	<COMPONENTS ACCESS>
+	
+
+ HOMEPAGE
+ home: localhost:3000 : /
+ 
+ 
+ SIGNIN
+ /signIn
+ 
+ VENUE LIST PAGE
+ /venueList
+ <HOST,BOOKEE>
+	<BUTTONS HOST>
+		< Add venue button>
+	
+
+
+
+ VENUE DETAILS PAGE
+ /venueList/venueId/edit
+ <HOST,BOOKEE>
+	<BUTTONS HOST>
+		<EDIT>
+	<BUTTONS BOOKEE>
+		<>
+ 
+	<COMPONENTS HOST>
+		
+	<COMPONENTS BID>
+	
+ 
+ 
+ 
+VENUE REVIEW PAGE
+/venueList/venueId/review
+<HOST>
+	<BUTTONS HOST>
+		
+		
+	<BUTTONS BOOKEE>
+		< >
+ 
+	<COMPONENTS HOST>
+		
+	<COMPONENTS BID>
+	
+	
+	
+	
+ 
+VENUE CREATE PAGE
+/venueList/new
+<HOST>
+	<BUTTONS HOST>
+		
+		
+	<BUTTONS BOOKEE>
+		<
+ 
+	<COMPONENTS HOST>
+		
+	<COMPONENTS BID>
+
+EVENTS LIST PAGE
+/eventList
+<CUSTOMER,BOOKEE>
+	<BUTTONS HOST>
+		
+		
+	<BUTTONS BOOKEE>
+		< >
+ 
+	<COMPONENTS HOST>
+		
+	<COMPONENTS BID>
+
+
+
+EVENT CREATE PAGE
+/eventList/new
+<BOOKEE>
+	<BUTTONS HOST>
+		
+		
+	<BUTTONS BOOKEE>
+		< >
+ 
+	<COMPONENTS HOST>
+		
+	<COMPONENTS BID>
+
+
+EVENT VIEW DETAILS
+/eventList/eventId
+<CUSTOMER,BOOKEE>
+	<BUTTONS HOST>
+		
+		
+	<BUTTONS BOOKEE>
+		< >
+ 
+	<COMPONENTS HOST>
+		
+	<COMPONENTS BID>
+	
+
+EVENT EDIT DETAILS
+/eventList/eventId/edit
+<BOOKEE>
+	<BUTTONS HOST>
+		
+		
+	<BUTTONS BOOKEE>
+		< >
+ 
+	<COMPONENTS HOST>
+		
+	<COMPONENTS BID>
+
+
+EVENT  DETAILS PAGE
+/eventList
+<CUSTOMER,BOOKEE>
+	<BUTTONS HOST>
+		
+		
+	<BUTTONS BOOKEE>
+		< >
+ 
+	<COMPONENTS HOST>
+		
+	<COMPONENTS BID>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
