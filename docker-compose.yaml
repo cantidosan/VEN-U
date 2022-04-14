@@ -1,0 +1,43 @@
+version: '2.4'
+
+services:
+
+  venu_backend:
+    build:
+      dockerfile: Dockerfile
+      context: ./backend
+    ports:
+      - '3001:3001'
+
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_PORT=5432
+      - DATABASE=onlydogs
+      - HOST=localhost
+      - POSTGRES_HOST=db
+      - CHOKIDAR_USEPOLLING=true
+
+    volumes:
+      - ./backend:/usr/src/app:cached
+      - /usr/src/app/node_modules
+    depends_on:
+      - db
+
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - PORT=5432
+      - DATABASE=onlydogs
+      - HOST=localhost
+    volumes:
+      - db-data:/var/lib/postgresql/data:delegated
+
+volumes:
+  db-data:
