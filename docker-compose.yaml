@@ -13,7 +13,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_PORT=5432
-      - DATABASE=onlydogs
+      - DATABASE=venue
       - HOST=localhost
       - POSTGRES_HOST=db
       - CHOKIDAR_USEPOLLING=true
@@ -34,7 +34,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - PORT=5432
-      - DATABASE=onlydogs
+      - DATABASE=venue
       - HOST=localhost
     volumes:
       - db-data:/var/lib/postgresql/data:delegated
