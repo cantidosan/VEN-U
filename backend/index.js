@@ -50,35 +50,35 @@ app.use(cors())
 //
 
 // THIS SHOULD SERVE AS THE TEMPLATE TI ACCESS THE DONE FUNCTION ON MONDAY
-// app.post('/login', function(req, res, next ){
-//     passport.authenticate('local', function(err, user, info) {
-//       if (err) { return next(err) }
-//       if (!user) { return res.json( { message: info.message }) }
-//       res.json(user);
-//     })(req, res, next);   
-// });
-app.post(
-    "/login"
-    ,
-    passport.authenticate("local", (err, user, info) => {
-        if (user) {
+app.post('/login', function (req, res, next) {
+    passport.authenticate('local', function (err, user, info) {
+        if (err) { return next(err) }
+        if (!user) { return res.json({ message: info.message }) }
+        res.json(user);
+    })(req, res, next);
+});
+// app.post(
+//     "/login"
+//     ,
+//     passport.authenticate("local", (err, user, info) => {
+//         if (user) {
 
-            console.log('err', err)
-            console.log('user', user)
-            console.log('info', info)
-        }
-
-
+//             console.log('err', err)
+//             console.log('user', user)
+//             console.log('info', info)
+//         }
 
 
-    },
-        // {
-        //     successRedirect: "/",
-        //     failureRedirect: "/login",
-        //     failureFlash: true
-        // }
-    )
-);
+
+
+//     },
+//         // {
+//         //     successRedirect: "/",
+//         //     failureRedirect: "/login",
+//         //     failureFlash: true
+//         // }
+//     )
+// );
 
 
 
