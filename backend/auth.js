@@ -3,6 +3,7 @@ const { pool } = require("./db-pool");
 const bcrypt = require("bcrypt");
 
 
+
 function initialize(passport) {
 
 
@@ -49,6 +50,7 @@ function initialize(passport) {
             }
         );
     };
+
 
     passport.use(
         new LocalStrategy(

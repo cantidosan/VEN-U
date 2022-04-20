@@ -146,7 +146,7 @@ PAGENAME/URLS
 	
 
  HOMEPAGE
- home: localhost:3000 : /
+ home: venu.com.local:3000 : /
  
  
  SIGNIN

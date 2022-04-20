@@ -12,6 +12,8 @@
     "bcrypt": "^5.0.1",
     "body": "^5.1.0",
     "body-parser": "^1.20.0",
+    "connect-pg-simple": "^7.0.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "express-flash": "^0.0.2",

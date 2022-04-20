@@ -14,6 +14,7 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_PORT=5432
       - DATABASE=venue
+
       - HOST=localhost
       - POSTGRES_HOST=db
       - CHOKIDAR_USEPOLLING=true
