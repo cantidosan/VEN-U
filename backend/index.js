@@ -10,7 +10,7 @@ const { pool } = require("./db-pool");
 
 const session = require("express-session");
 const pgSession = require('connect-pg-simple')(session)
-
+const sessionAuth = require('./sessionAuth');
 
 
 
@@ -66,7 +66,14 @@ checkAuthenticated = (req, res, next) => {
 
     // console.log('req.session', req.session)
 
-    console.log('req.sess.pass.user', req.cookies)
+    console.log('header details', req.headers.sessionid)
+
+
+
+
+
+
+
     // This checks if req.sessions.passport.user exists
 
     // if (req.isAuthenticated()) {
@@ -98,6 +105,7 @@ app.post('/login', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) { return next(err) }
         if (!user) { return res.json({ message: info.message }) }
+        console.log('user object details', user)
         req.login(user, function (err) {
 
             if (err) {
@@ -106,9 +114,9 @@ app.post('/login', function (req, res, next) {
                 }))
             }
         })
-        console.log('sess', req.cookie)
+        // console.log('sess', req.cookie)
 
-        res.json(req.session);
+        res.json(req.sessionID);
 
 
     })(req, res, next);
@@ -116,7 +124,7 @@ app.post('/login', function (req, res, next) {
 
 });
 
-app.get('/venues', checkAuthenticated, (req, res) => {
+app.get('/venues', sessionAuth, (req, res) => {
 
     /* pool method makes request for venue information */
 
