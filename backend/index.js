@@ -117,6 +117,7 @@ app.post('/login', function (req, res, next) {
         // console.log('sess', req.cookie)
 
         res.json(req.sessionID);
+        // res.json(req.user);
 
 
     })(req, res, next);
@@ -124,7 +125,7 @@ app.post('/login', function (req, res, next) {
 
 });
 
-app.get('/venues', sessionAuth, (req, res) => {
+app.get('/venues', (req, res) => {
 
     /* pool method makes request for venue information */
 
@@ -142,18 +143,62 @@ app.get('/venues', sessionAuth, (req, res) => {
 
 })
 
-app.get('/venues/:venue_id', checkAuthenticated, (req, res) => {
+app.get('/venues/:venue_id', (req, res) => {
 
     /* pool method makes request for venue information */
+    const { venue_id } = req.params
 
+    getVenueQuery = 'SELECT * FROM venues  $1'
 
-    pool.query('SELECT * FROM venues ', (error, results) => {
+    pool.query(getVenueQuery, [venue_id], (error, results) => {
         if (error) {
 
             res.status(500)
             throw error
         }
         else {
+            console.log('pool query')
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+app.patch('/venues/:venue_id', (req, res) => {
+
+    /* pool method makes request for venue information */
+    const { venue_id } = req.params
+
+    updateVenueQuery = 'UPDATE * FROM venues ;'
+
+    pool.query(updateVenueQuery, [venue_id], (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+            console.log('pool query')
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+
+app.get('/venues/:venue_id/dates', (req, res) => {
+
+    /* pool method makes request for venue information */
+    const { venue_id } = req.params
+
+    getVenuesDatesQuery = 'SELECT * FROM venues WHERE '
+
+    pool.query(getVenuesDatesQuery, [venue_id], (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+            console.log('pool query')
             res.status(200).json(results.rows)
         }
     })
@@ -161,6 +206,165 @@ app.get('/venues/:venue_id', checkAuthenticated, (req, res) => {
 })
 
 
+
+
+app.get('/amenities/:venueId', (req, res) => {
+
+    const { venueId } = req.params
+
+    getVenueAmenitiesQuery = `SELECT * FROM amenities ;`
+
+    pool.query(getVenueAmenitiesQuery, [venueId], (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+
+app.get('/pictures/events/:eventId', (req, res) => {
+
+    const { eventId } = req.params
+
+    getEventPictureQuery = `SELECT * FROM pictures ;`
+
+    pool.query(getEventPictureQuery, (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+app.get('/pictures/venues/:venue_id', (req, res) => {
+
+    const { venue_id } = req.params
+
+    getVenuePictureQuery = `SELECT * FROM pictures ;`
+
+    pool.query(getVenuePictureQuery, [venueId], (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+
+
+app.get('/events', (req, res) => {
+
+
+
+    getEventsQuery = `SELECT * FROM events ;`
+
+    pool.query(getEventsQuery, (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+app.get('/events/:event_id', (req, res) => {
+
+
+
+    getEventQuery = `SELECT * FROM events ;`
+
+    pool.query(getEventQuery, (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+app.patch('/events/:event_id', (req, res) => {
+
+
+
+    updateEventQuery = `UPDATE * FROM events ;`
+
+    pool.query(getEventQuery, (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+
+app.get('/events/related/:venue_id', (req, res) => {
+
+
+
+    getEventsQuery = `SELECT * FROM events ;`
+
+    pool.query(getEventsQuery, (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+
+app.get('/events/pending/:venue_id', (req, res) => {
+
+    const { venue_id } = req.params
+
+    unapprovedEventQuery = `SELECT * FROM events ;`
+
+    pool.query(unapprovedEventQuery, (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
 
 
 

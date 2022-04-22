@@ -4,8 +4,8 @@ const { pool } = require("./db-pool");
 function sessionAuthenticate(req, res, next) {
 
 
-    const { sessionid } = req.headers
-    console.log('sessid', sessionid)
+    const { sessionid } = req.sessionID
+    console.log('sessid', req.sessionID)
 
     const getSessionQuery = `SELECT * FROM sessions
                                 WHERE sessions.sid = $1
@@ -30,9 +30,9 @@ function sessionAuthenticate(req, res, next) {
 
             } else {
                 // // No user
-                // res.status(401).send({
-                //     message: "Unavailable Session!"
-                // });
+                res.status(500).send({
+                    message: "Unavailable Session!"
+                });
                 console.log('USER NEEDS TO LOGIN')
             }
         }
