@@ -366,6 +366,25 @@ app.get('/events/pending/:venue_id', (req, res) => {
 
 })
 
+app.get('/venueIssues/:venue_id', (req, res) => {
+
+    const { venue_id } = req.params
+
+    venueIssuesQuery = `SELECT * FROM venueIssues ;`
+
+    pool.query(venueIssuesQuery, (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
 
 
 
