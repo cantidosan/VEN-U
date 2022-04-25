@@ -1,7 +1,7 @@
 
 CREATE DATABASE venue;
 
--- DROP TABLE  IF EXISTS  users,venues,events,venueissues,amentities,pictures_events,pictures_venues,customer ;
+-- DROP TABLE  IF EXISTS  users,venues,events,venueissues,amentities,pictures_events,pictures_venues,customer, ;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TYPE user_type AS ENUM ('HOST', 'BOOKEE', 'CUSTOMER');
@@ -33,12 +33,13 @@ CREATE TABLE "events" (
   "type" event_type,
   "entry_price" int,
   "start_date" date,
-  "duration" date,
-  "start_time" date,
+  "duration" int,
+  "start_time" time,
   "promotional_details" varchar(250),
   "venue_id" uuid,
   "is_active" boolean
 );
+
 
 
 CREATE TABLE "venueissues" (
@@ -61,18 +62,40 @@ CREATE TABLE "venues" (
   "is_active" boolean
 );
 
+-- CREATE TABLE "amenities" (
+--   "id" uuid  DEFAULT uuid_generate_v4 () PRIMARY KEY,
+--   "venue_id" uuid UNIQUE,
+--   "amenity_id" uuid,
+--   "amenity_name" varchar,
+  
+  
+-- );
+
+ALTER TABLE "events" ADD FOREIGN KEY("bookee_id") REFERENCES "users"("id");
+ALTER TABLE "events" ADD FOREIGN KEY ("venue_id") REFERENCES "venues" ("id");
 
 
+CREATE TABLE "amenities"(
 
-CREATE TABLE "amenities" (
-  "id" uuid  DEFAULT uuid_generate_v4 () PRIMARY KEY,
-  "venue_id" uuid,
-  "Parking" boolean,
-  "Blankets" boolean,
-  "Food" boolean,
-  "Electricity" boolean,
-  "WiFi" boolean
+  "id" uuid  DEFAULT uuid_generate_v4() PRIMARY KEY,
+  "name" VARCHAR
+  
 );
+
+
+
+CREATE TABLE "venue_amenities"(
+
+    "venue_id" uuid ,
+    "amenity_id" uuid UNIQUE,
+    "is_active" BOOLEAN,
+    PRIMARY KEY(venue_id,amenity_id)
+);
+
+ALTER  TABLE "venue_amenities" ADD FOREIGN KEY("venue_id") REFERENCES "venues"("id");
+ALTER  TABLE "venue_amenities" ADD FOREIGN KEY("amenity_id") REFERENCES "amenities"("id");
+
+
 
 CREATE TABLE "pictures_events" (
   "id" uuid  DEFAULT uuid_generate_v4 () PRIMARY KEY,
@@ -104,13 +127,6 @@ ALTER TABLE "venueissues" ADD FOREIGN KEY ("venue_id") REFERENCES "venues" ("id"
 ALTER TABLE "venueissues" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
 
-ALTER  TABLE "amenities" ADD FOREIGN KEY("venue_id") REFERENCES "venues"("id");
-
-
-ALTER TABLE "events" ADD FOREIGN KEY("bookee_id") REFERENCES "users"("id");
-
-
-ALTER TABLE "events" ADD FOREIGN KEY ("venue_id") REFERENCES "venues" ("id");
 
 ALTER TABLE "pictures_events" ADD FOREIGN KEY ("event_id") REFERENCES "events" ("id");
 
@@ -163,136 +179,173 @@ insert into users (username, first_name, last_name, created_at, email, password,
 insert into users (username, first_name, last_name, created_at, email, password, last_logged, updated_at, is_active, user_type, phone) values ('djeayes13', 'Dov', 'Jeayes', '9/23/2021', 'djeayes13@cyberchimps.com', '$2a$08$EeQcxhHIh4d7Q3JpOlBCq.M.wky0s19Gs.2L/kYfTmqwAGgjDTSVm', '8/29/2021', '8/25/2021', true, 'HOST', '478-261-7023');
 
 
+-- --POPULATE THE AMENITIES TABLE
+insert into amenities (name) values ('parking');
+insert into amenities (name) values ('blankets');
+insert into amenities (name) values ('food');
+insert into amenities (name) values ('Electricity');
+insert into amenities (name) values ('WiFi');
+
+-- -- PROCEDURE-- 
+
+-- CREATE OR REPLACE FUNCTION on_insert()
+--   RETURNS trigger AS
+-- $$
+-- BEGIN
+--          INSERT INTO venue_amenities(venue_id,amenity_id,is_active)
+--          VALUES(NEW.venue_id,(SELECT id FROM amenities where name = 'parking'),false);
+--          INSERT INTO venue_amenities(venue_id,amenity_id,is_active)
+--          VALUES(NEW.venue_id,(SELECT id FROM amenities where name = 'blankets'),false);
+--          INSERT INTO venue_amenities(venue_id,amenity_id,is_active)
+--          VALUES(NEW.venue_id,(SELECT id FROM amenities where name = 'food'),false);
+--          INSERT INTO venue_amenities(venue_id,amenity_id,is_active)
+--          VALUES(NEW.venue_id,(SELECT id FROM amenities where name = 'Electricity'),false);
+--          INSERT INTO venue_amenities(venue_id,amenity_id,is_active)
+--          VALUES(NEW.venue_id,(SELECT id FROM amenities where name = 'WiFi'),false);
+         
+ 
+--     RETURN NEW;
+-- END;
+-- $$
+-- LANGUAGE 'plpgsql';
+
+-- -- TRIGGER
+
+-- CREATE TRIGGER ins_same_rec
+--   AFTER INSERT
+--   ON venues
+--   FOR EACH ROW
+--   EXECUTE PROCEDURE on_insert();
+  
+
+-- --
+
+
 -- POPULATE VENUES TABLE
 -- NEEDS USERID
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dallmark0', '9 Veith Hill', 1.59, '3128637c-6643-4255-9e60-6a280796cfb1 ', '7/28/2021', '10/19/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('mmathis1', '207 Burning Wood Circle', 3, '3128637c-6643-4255-9e60-6a280796cfb1 ', '5/4/2021', '10/15/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('abeaston2', '6180 Rutledge Center', 4, ' 8008bcb3-9866-40dd-8061-0d0d481df356 ', '1/18/2022', '5/29/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('drodell3', '698 Glacier Hill Way', 7, '3128637c-6643-4255-9e60-6a280796cfb1 ', '4/11/2022', '5/11/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('lallsupp4', '54 Shopko Terrace', 7, '3128637c-6643-4255-9e60-6a280796cfb1 ', '9/12/2021', '4/11/2022', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('mgreensted5', '8 Park Meadow Terrace', 5, '3128637c-6643-4255-9e60-6a280796cfb1 ', '11/11/2021', '5/8/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('mgarretts6', '83452 1st Trail', 1, ' 8008bcb3-9866-40dd-8061-0d0d481df356 ', '4/20/2022', '9/3/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('cmaudsley7', '83047 Clove Drive', 4, '8905b4e2-47fe-45b6-9da3-961650fee8f2', '5/31/2021', '4/26/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('abernollet8', '616 Autumn Leaf Trail', 9, 'aaa10736-b683-423d-bedd-46de86fc8c6c', '7/1/2021', '4/2/2022', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('vstclair9', '8100 Village Green Crossing', 2, 'aaa10736-b683-423d-bedd-46de86fc8c6c', '2/27/2022', '1/12/2022', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ssteffensa', '83 Briar Crest Crossing', 5, '13644872-21d9-41eb-8e8a-b241b3351d98', '9/29/2021', '4/21/2022', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('smccartb', '7070 Division Hill', 4, '35f9fc5d-d57e-47f8-a78c-8fe3af98e7ae ', '11/12/2021', '1/15/2022', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dlotsc', '1190 Roth Place', 1, '13644872-21d9-41eb-8e8a-b241b3351d98', '1/17/2022', '1/1/2022', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ecourtind', '635 Marcy Place', 4, 'f8cf60d6-5e7b-4a00-bc3b-cd6a1887096d', '4/12/2022', '5/30/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('nbrusselse', '2538 Parkside Place', 7., 'db44c513-ef0f-4a09-a3b4-ce0691e5e12a', '6/8/2021', '5/15/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dbicklef', '572 Porter Alley', 8, 'db44c513-ef0f-4a09-a3b4-ce0691e5e12a', '6/22/2021', '6/22/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dpattieg', '7 Northfield Court', 1, ' 22463919-fabc-4db4-b4f1-ad956dad492e ', '12/8/2021', '5/20/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('spozzih', '0719 Dayton Alley', 3.49, '8905b4e2-47fe-45b6-9da3-961650fee8f2', '6/23/2021', '5/10/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('tbramei', '1 7th Drive', 1.83, '6a768ea3-22b0-4f47-93a3-d30a1d530035', '12/4/2021', '11/11/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('fmanwellj', '0 Washington Circle', 6, '9cba983f-5aa9-4cef-971f-8aed413fa3e6', '9/4/2021', '7/21/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('cbettesonk', '08730 Di Loreto Park', 7, 'db44c513-ef0f-4a09-a3b4-ce0691e5e12a', '11/10/2021', '6/10/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ihowell', '2887 Badeau Place', 2, ' d421e21a-4d4c-43f3-b11d-2eaf41867681', '3/5/2022', '8/14/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('npietrzakm', '3566 Kipling Parkway', 2.71, ' d421e21a-4d4c-43f3-b11d-2eaf41867681 ', '1/2/2022', '9/3/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ppennazzin', '793 Waywood Crossing', 3.97, ' d421e21a-4d4c-43f3-b11d-2eaf41867681', '1/31/2022', '9/18/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('nrammo', '65 Forest Avenue', 1, 'db44c513-ef0f-4a09-a3b4-ce0691e5e12a', '12/5/2021', '11/7/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dsotheronp', '91664 Charing Cross Plaza', '3.37', '9cba983f-5aa9-4cef-971f-8aed413fa3e6 ', '6/5/2021', '5/6/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('abusheq', '821 Stuart Alley', 7.06, '2acf89a4-a616-429a-b2b1-309d328d07a1', '3/4/2022', '6/15/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('spriestlandr', '9402 Talmadge Alley', 1.49, '9cba983f-5aa9-4cef-971f-8aed413fa3e6', '2/25/2022', '10/27/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('bfyalls', '98 Forster Parkway', 6.41, ' 8008bcb3-9866-40dd-8061-0d0d481df356 ', '8/14/2021', '2/10/2022', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ckyndert', '558 Lerdahl Pass', 5.98, '9cba983f-5aa9-4cef-971f-8aed413fa3e6', '7/10/2021', '2/18/2022', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('asandifordu', '276 Fordem Crossing', 8.2, '13644872-21d9-41eb-8e8a-b241b3351d98', '10/17/2021', '7/13/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ccaplisv', '84901 Marcy Road', 1.44, '9cba983f-5aa9-4cef-971f-8aed413fa3e6 ', '1/25/2022', '3/22/2022', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dfeakew', '6 Quincy Way', 7.09, 'aa43cd91-b02b-4c3a-abd5-7da25243bc7d', '7/31/2021', '1/23/2022', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('bfullalovex', '7475 Nelson Court', 8, '9cba983f-5aa9-4cef-971f-8aed413fa3e6', '8/7/2021', '11/18/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('chearmony', '1397 Gerald Parkway', 52, '12712f01-c8f3-4013-a0aa-994bf10c3893', '12/30/2021', '1/5/2022', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('amcrillz', '909 South Court', 9, '6a768ea3-22b0-4f47-93a3-d30a1d530035', '5/24/2021', '6/17/2021', true);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('tpolack10', '48 Butterfield Alley', 8.35, '8905b4e2-47fe-45b6-9da3-961650fee8f2 ', '9/30/2021', '11/29/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('alinnit11', '7 Arkansas Lane', 4.29, '6a768ea3-22b0-4f47-93a3-d30a1d530035', '9/9/2021', '5/27/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('sopie12', '45 Randy Drive', 3.21, '22463919-fabc-4db4-b4f1-ad956dad492e', '11/5/2021', '6/13/2021', false);
-insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('rherreros13', '80 Crowley Trail', 3.46, '6a768ea3-22b0-4f47-93a3-d30a1d530035', '2/21/2022', '7/30/2021', false);
+-- insert into venue_amenities(venue_id,amenities_id,is_active) VALUES(
+--   (insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dallmark0', '9 Veith Hill', 1.59, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '7/28/2021', '10/19/2021', false) RETURNING id;),
+--   (SELECT id FROM amenities where name = 'parking'),false)
+-- )
+  
 
 
 
 
 
--- --POPULATE THE AMENITIES TABLE
--- NEEDS VENUEID
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('71043310-d373-47db-8014-c883a0d1b884', false, false, false, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('71e5fb01-ea0b-42d9-b1d9-20137a1dffcc', false, false, false, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('a050f1a1-1048-45a0-bb78-6bbe39f1fd89', true, false, false, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('ebda04ed-4143-48ac-89c7-7c6c17391865', true, false, false, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('c22a4ec5-7efc-4026-a004-7144682e92a4', false, false, true, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('38b4364b-3226-447e-850c-0df93c4fbba4', false, true, false, false, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('2407ea6f-430b-4ffe-9cfa-415d35c1ed59', false, false, true, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('29323ed4-a364-4517-9216-460d55126f5c', false, false, true, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('2a5d6bee-7cde-46af-b32c-846480c25456', false, true, false, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('2a2850a3-fea3-4481-9870-af68ac1238fc', true, true, true, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('07bc2523-d9c5-4e09-8445-bfee2a9b1627', false, true, false, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('bc716224-c442-4cbe-859f-94eddf231196', true, true, true, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('c01dc419-b65e-45d7-920e-c154dc9f29cd', true, true, true, false, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('e60958be-3cf0-4835-99be-9a5b5f31437f', true, false, false, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('199e86cd-d4b4-4b8c-b528-0752c0a1d0f2', true, false, false, false, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('33db4b31-c9af-4059-a971-9f9930b6100f', false, true, true, false, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('62e3ae51-0567-4aeb-bd25-df4cd2ed84ee', false, false, true, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('3a86b4e5-f7c9-4941-9a43-53e91db74e4b', false, true, false, false, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('4ef016cf-a72f-4c41-906d-61b254d4dc86', true, true, false, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('736b92bc-83b9-4aff-a31b-2f4f69a15c01', true, false, true, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('86f31d4d-c1c9-4154-b1dd-a14cab0a6d73', false, true, false, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('4461b2b3-adcc-4c30-ba3c-f3c28b3f8183', true, false, true, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('1749e731-c9de-49eb-8625-ae074c362e25', false, false, true, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('9a853684-e9a9-41ff-8e12-d3847a0a5cb1', false, true, false, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('995d3024-e2ed-489d-997b-a4dea18cc72d', true, false, true, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('d0871e49-4ed5-4320-8ae3-ad0e7eb377df', false, true, true, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('305bb227-80e9-40a5-ac56-3b6c5e7cdef8', false, true, true, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('edebda29-f38f-4a8c-a2a7-acbcc3520bca', false, false, false, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('f7cc4659-8756-41e1-be2d-69317364600d', true, false, true, false, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('8f3490b3-e07f-4b63-b047-f291d8982d33', false, false, false, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('f3f03cfa-03f2-4005-94a4-6ffc26ac6b5f', false, true, true, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('559dda18-1674-4076-b0bc-88a491855782', false, true, false, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('083fe81d-bc48-4d5d-a4fe-01c3e6b5be93', false, false, true, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('5c5fa8e3-8af8-4bbf-8bc0-631ba4c04b79', true, true, false, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('9e1229c2-831a-4639-8c28-9d772955fc49', false, true, true, true, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('422c8acd-03da-4700-af30-39b257b32d8f', false, false, false, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('ec024f21-1aca-4f73-b32e-40e42115d0c6', true, false, false, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('b5ba1bbb-6268-409b-b3dc-2eb07738371b', true, false, true, true, false);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('4f96ab0f-cca1-4de2-8649-7774364fa2d6', true, true, true, false, true);
--- insert into amenities (venue_id, parking, blankets, food, Electricity, WiFi) values ('de1074e6-6d44-4168-bce6-bc6a732e8054', true, true, true, true, true);
 
 
 
 
 
--- -- POPULATE THE EVENTS TABLE
+
+
+
+
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('mmathis1', '207 Burning Wood Circle', 3, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '5/4/2021', '10/15/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('abeaston2', '6180 Rutledge Center', 4, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '1/18/2022', '5/29/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('drodell3', '698 Glacier Hill Way', 7, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '4/11/2022', '5/11/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('lallsupp4', '54 Shopko Terrace', 7, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '9/12/2021', '4/11/2022', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('mgreensted5', '8 Park Meadow Terrace', 5, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '11/11/2021', '5/8/2021', true);
+
+
+
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('mgarretts6', '83452 1st Trail', 1, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '4/20/2022', '9/3/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('cmaudsley7', '83047 Clove Drive', 4, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '5/31/2021', '4/26/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('abernollet8', '616 Autumn Leaf Trail', 9, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '7/1/2021', '4/2/2022', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('vstclair9', '8100 Village Green Crossing', 2, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '2/27/2022', '1/12/2022', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ssteffensa', '83 Briar Crest Crossing', 5, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '9/29/2021', '4/21/2022', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('smccartb', '7070 Division Hill', 4, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '11/12/2021', '1/15/2022', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dlotsc', '1190 Roth Place', 1, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '1/17/2022', '1/1/2022', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ecourtind', '635 Marcy Place', 4, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '4/12/2022', '5/30/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('nbrusselse', '2538 Parkside Place', 7, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '6/8/2021', '5/15/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dbicklef', '572 Porter Alley', 8, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '6/22/2021', '6/22/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dpattieg', '7 Northfield Court', 1, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '12/8/2021', '5/20/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('spozzih', '0719 Dayton Alley', 3.49, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '6/23/2021', '5/10/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('tbramei', '1 7th Drive', 1.83, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '12/4/2021', '11/11/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('fmanwellj', '0 Washington Circle', 6, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '9/4/2021', '7/21/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('cbettesonk', '08730 Di Loreto Park', 7, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '11/10/2021', '6/10/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ihowell', '2887 Badeau Place', 2, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '3/5/2022', '8/14/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('npietrzakm', '3566 Kipling Parkway', 2.71, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '1/2/2022', '9/3/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ppennazzin', '793 Waywood Crossing', 3.97, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '1/31/2022', '9/18/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('nrammo', '65 Forest Avenue', 1, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '12/5/2021', '11/7/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dsotheronp', '91664 Charing Cross Plaza', '3.37', (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '6/5/2021', '5/6/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('abusheq', '821 Stuart Alley', 7.06, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '3/4/2022', '6/15/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('spriestlandr', '9402 Talmadge Alley', 1.49, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '2/25/2022', '10/27/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('bfyalls', '98 Forster Parkway', 6.41, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '8/14/2021', '2/10/2022', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ckyndert', '558 Lerdahl Pass', 5.98, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '7/10/2021', '2/18/2022', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('asandifordu', '276 Fordem Crossing', 8.2, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '10/17/2021', '7/13/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('ccaplisv', '84901 Marcy Road', 1.44, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '1/25/2022', '3/22/2022', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('dfeakew', '6 Quincy Way', 7.09, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '7/31/2021', '1/23/2022', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('bfullalovex', '7475 Nelson Court', 8, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '8/7/2021', '11/18/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('chearmony', '1397 Gerald Parkway', 52, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '12/30/2021', '1/5/2022', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('amcrillz', '909 South Court', 9, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '5/24/2021', '6/17/2021', true);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('tpolack10', '48 Butterfield Alley', 8.35, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '9/30/2021', '11/29/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('alinnit11', '7 Arkansas Lane', 4.29, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '9/9/2021', '5/27/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('sopie12', '45 Randy Drive', 3.21, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '11/5/2021', '6/13/2021', false);
+-- insert into venues (name, location, price, host_id, created_at, updated_at, is_active) values ('rherreros13', '80 Crowley Trail', 3.46, (SELECT id FROM users WHERE user_type = 'HOST' ORDER BY RANDOM() LIMIT 1), '2/21/2022', '7/30/2021', false);
+
+
+-- POPULATE THE EVENTS TABLE
 -- NEEDS USERID AND VENUE ID
--- insert into eventd (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Torphy Group', '4 South Point', '5969174b-214d-4748-9b2a-b6064817b03c', '10/26/2021', '1-S', 5, '1/1/2022', 74, '7:10 PM', 'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.', '2bf61b42-9c8b-4cac-9edf-beb5896f1fea', true);
--- insert into eventd (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Reinger, Wilderman and Cummings', '748 Tomscot Alley', 'ee5098ee-1018-47e0-a8a0-7ef2f2fb1a55', '8/6/2021', '1-M', 89, '11/22/2021', 57, '1:04 PM', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '5346e8ec-803c-4a4c-bc0a-5deada7ce09f', false);
--- insert into eventd (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Robel and Sons', '035 Division Crossing', '5227c385-ce2c-4dfa-a3e6-8dfd34a29881', '7/14/2021', '1-S', 77, '1/16/2022', 3, '9:20 PM', 'Fusce posuere felis sed lacus. Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl. Nunc rhoncus dui vel sem.Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.sque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', '284a6c60-8b89-4379-9a0f-7d66a2b11447', false);
--- insert into eventd (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Collier, Collins and Stracke', '194 Pankratz Lane', '785cc5dd-1342-41eb-bd15-b3e384506516', '4/30/2021', '1-M', 21, '3/9/2022', 15, '5:52 AM', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.', 'ca67190c-8178-495f-9603-97d91284fc13', false);
--- insert into eventd (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Kling, Beahan and Kuhlman', '05 Cardinal Hill', 'b22fd6f7-b85c-42a9-a8a1-9da560b50b21', '12/2/2021', '1-1', 68, '10/8/2021', 55, '7:56 PM', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.', '3dd3477c-6371-4a16-84f3-3f44b1593c92', true);
+
+-- insert into events (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Torphy Group', '4 South Point', (SELECT id FROM users WHERE user_type='BOOKEE' ORDER BY RANDOM() LIMIT 1), '10/26/2021', '1-S', 5, '1/1/2022', 74, '7:10 PM', 'Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.', (SELECT id from venues WHERE is_active = true ORDER BY RANDOM() LIMIT 1)  , true);
+-- insert into events (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Reinger, Wilderman and Cummings', '748 Tomscot Alley', (SELECT id FROM users WHERE user_type='BOOKEE' ORDER BY RANDOM() LIMIT 1), '8/6/2021', '1-M', 89, '11/22/2021', 57, '1:04 PM', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.',(SELECT id from venues WHERE is_active = true ORDER BY RANDOM() LIMIT 1), false);
+-- insert into events (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Robel and Sons', '035 Division Crossing', (SELECT id FROM users WHERE user_type='BOOKEE' ORDER BY RANDOM() LIMIT 1), '7/14/2021', '1-S', 77, '1/16/2022', 3, '9:20 PM', 'Fusce posuere felis sed lacus. Morbi sem mauris, us.sque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', (SELECT id from venues WHERE is_active = true ORDER BY RANDOM() LIMIT 1), false);
+-- insert into events (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Collier, Collins and Stracke', '194 Pankratz Lane', (SELECT id FROM users WHERE user_type='BOOKEE' ORDER BY RANDOM() LIMIT 1), '4/30/2021', '1-M', 21, '3/9/2022', 15, '5:52 AM', 'Maecenas tristique, est et tempus semper, est quaa Curae; Mauris viverra diam vitae quam. Suspendisse potenti.', (SELECT id from venues WHERE is_active = true ORDER BY RANDOM() LIMIT 1), false);
+-- insert into events (name, location, bookee_id, created_at, type, entry_price, start_date, duration, start_time, promotional_details, venue_id, is_active) values ('Kling, Beahan and Kuhlman', '05 Cardinal Hill', (SELECT id FROM users WHERE user_type='BOOKEE' ORDER BY RANDOM() LIMIT 1), '12/2/2021', '1-1', 68, '10/8/2021', 55, '7:56 PM', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.', (SELECT id from venues WHERE is_active = true ORDER BY RANDOM() LIMIT 1), true);
+
+
+
+
+
+
+
+-- NEEDS VENUEID
+
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5', '1ff4786d-cd58-47a5-9683-a48568ae1f3d',false);
+-- insert into venue_amenities (venue_id,amenity_id, is_active ) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5', '80e5964f-6409-41c1-a620-bdc329cd5def',false);
+-- insert into venue_amenities (venue_id,amenity_id, is_active ) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5', 'cdd5fcb7-7e93-4e45-b4e3-eb1f6b8a96cb',false);
+-- insert into venue_amenities (venue_id,amenity_id, is_active ) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5','25ab1821-07db-41db-b384-2950ef4f754a',false);
+
+
+
+
 
 
 
 
 -- -- POPULATE EVENT PICTURES TABLE
--- insert into pictures_events (event_id, pic_url, is_active) values ('8e425699-743d-48c0-824d-72d72064d00f', 'http://dummyimage.com/228x100.png/dddddd/000000', true);
--- insert into pictures_events (event_id, pic_url, is_active) values ('eb56b18d-4af6-4060-b865-e40689758745', 'http://dummyimage.com/189x100.png/cc0000/ffffff', false);
--- insert into pictures_events (event_id, pic_url, is_active) values ('22d582b5-cff4-4810-9b49-9d81bd30346a', 'http://dummyimage.com/102x100.png/cc0000/ffffff', true);
--- insert into pictures_events (event_id, pic_url, is_active) values ('322a5768-7b51-47ea-ab70-4cbd5b6eaea5', 'http://dummyimage.com/126x100.png/5fa2dd/ffffff', true);
--- insert into pictures_events (event_id, pic_url, is_active) values ('bc2551cd-0e70-43c9-b73e-77312452faa5', 'http://dummyimage.com/249x100.png/cc0000/ffffff', false);
--- insert into pictures_events (event_id, pic_url, is_active) values ('daea20a6-0e42-4c15-9723-c8b6bf10a222', 'http://dummyimage.com/195x100.png/cc0000/ffffff', false);
--- insert into pictures_events (event_id, pic_url, is_active) values ('83b4ecec-f592-4742-89cc-4f0cb0cabde2', 'http://dummyimage.com/197x100.png/ff4444/ffffff', true);
--- insert into pictures_events (event_id, pic_url, is_active) values ('29901cde-799f-4b9d-b2e8-69f91a231438', 'http://dummyimage.com/155x100.png/cc0000/ffffff', false);
--- insert into pictures_events (event_id, pic_url, is_active) values ('a10e0216-30af-4dd1-aeea-a3851e797e98', 'http://dummyimage.com/158x100.png/5fa2dd/ffffff', false);
--- insert into pictures_events (event_id, pic_url, is_active) values ('d1ea0554-3b0f-45dc-9a93-d94d70cc8e28', 'http://dummyimage.com/133x100.png/dddddd/000000', false);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('3b26f2ac-b306-41af-8179-3bcf41f91e50', 'https://unsplash.com/photos/hTv8aaPziOQ', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('3b26f2ac-b306-41af-8179-3bcf41f91e50', 'https://unsplash.com/photos/hzgs56Ze49s', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('3b26f2ac-b306-41af-8179-3bcf41f91e50', 'https://unsplash.com/photos/ULHxWq8reao', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('3b26f2ac-b306-41af-8179-3bcf41f91e50', 'https://unsplash.com/photos/fIHozNWfcvs', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('56c86030-05a8-490a-891a-46604d66a63a', 'https://unsplash.com/photos/I9j8Rk-JYFM', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('56c86030-05a8-490a-891a-46604d66a63a', 'https://unsplash.com/photos/9vDdkxSCAD4', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('56c86030-05a8-490a-891a-46604d66a63a', 'https://unsplash.com/photos/74tlEYKgrBE', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('ed2249bb-b217-4400-97c1-a35ab773bdbf', 'https://unsplash.com/photos/nLUb9GThIcg', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('ed2249bb-b217-4400-97c1-a35ab773bdbf', 'https://unsplash.com/photos/_HXFz-0g9w8', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('ed2249bb-b217-4400-97c1-a35ab773bdbf', 'https://unsplash.com/photos/3skLpaOBlMw', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('a7994559-83ef-4464-a8e7-69c6095c6554', 'https://unsplash.com/photos/OQOKSsj8QME', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('a7994559-83ef-4464-a8e7-69c6095c6554', 'https://unsplash.com/photos/ya631mqQ7Ng', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('a7994559-83ef-4464-a8e7-69c6095c6554', 'https://unsplash.com/photos/UV3GmG_HEqI', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('933510e5-d960-4bd2-a67e-48d702df7fad', 'https://unsplash.com/photos/AZMmUy2qL6A', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('933510e5-d960-4bd2-a67e-48d702df7fad', 'https://unsplash.com/photos/vFMY_lgJ8rg', true);
+-- insert into pictures_events (event_id, pic_url, is_active) values ('933510e5-d960-4bd2-a67e-48d702df7fad', 'https://unsplash.com/photos/pYjRGc81avs', true);
 
 
 
 -- -- POPULATE VENUE PICTURES TABLE
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('3df1dbb6-14db-4063-b84f-1ebadf359efd', 'http://dummyimage.com/112x100.png/ff4444/ffffff', false);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('e3beca08-58ba-4e6c-b7f8-b615fe54235f', 'http://dummyimage.com/129x100.png/ff4444/ffffff', false);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('a76c3e17-50a9-429a-80cf-8859601fc296', 'http://dummyimage.com/243x100.png/ff4444/ffffff', true);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('2b978e91-0ed9-4aa8-ba11-e5ab8af8a9bd', 'http://dummyimage.com/119x100.png/5fa2dd/ffffff', true);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('67879237-1043-41b7-a955-58df13bb4d06', 'http://dummyimage.com/239x100.png/5fa2dd/ffffff', true);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('1f23de85-0b74-42ca-aa78-806d6f0d770b', 'http://dummyimage.com/121x100.png/cc0000/ffffff', false);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('2349b2f6-ab45-47c4-9b43-281cb3da35d1', 'http://dummyimage.com/177x100.png/dddddd/000000', true);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('b81e5c1b-51cc-496f-b782-ce89e08e4d3d', 'http://dummyimage.com/233x100.png/5fa2dd/ffffff', true);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('d485580d-0eb4-47e6-a552-e8a90afbff02', 'http://dummyimage.com/214x100.png/5fa2dd/ffffff', false);
--- insert into pictures_venues (venue_id, pic_url, is_active) values ('6db07506-cf8f-4384-8a0a-02cd142028a4', 'http://dummyimage.com/185x100.png/5fa2dd/ffffff', false);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('29594aa7-9160-4344-96b4-ccca63e15bf0', 'https://unsplash.com/photos/olVJDJYKPSI', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('29594aa7-9160-4344-96b4-ccca63e15bf0', 'https://unsplash.com/photos/fqUmkIyFMNk', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('d3136f4b-e852-4be1-94db-13245240e295', 'https://unsplash.com/photos/skAv-NHClaE', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('d3136f4b-e852-4be1-94db-13245240e295', 'https://unsplash.com/photos/NMcC4oakPKc', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('c385fc4b-070a-4fca-a512-11f219f60b71', 'https://unsplash.com/photos/vTA42h-v0pw', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('c385fc4b-070a-4fca-a512-11f219f60b71', 'https://unsplash.com/photos/ZYT7O6UlB14', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('3bc97358-d171-4c02-846a-e38425f53993', 'https://unsplash.com/photos/s08uwbS1DkE', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('3bc97358-d171-4c02-846a-e38425f53993', 'https://unsplash.com/photos/NmInovQT-Rs', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5', 'https://unsplash.com/photos/iJgmwXLc35g', true);
+-- insert into pictures_venues (venue_id, pic_url, is_active) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5', 'https://unsplash.com/photos/Y9xVffMVZNM', true);
 
 
 

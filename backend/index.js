@@ -137,7 +137,9 @@ app.get('/venues', (req, res) => {
             throw error
         }
         else {
+            console.log('success qry res')
             res.status(200).json(results.rows)
+            // res.status(200).json(results.rows)
         }
     })
 
