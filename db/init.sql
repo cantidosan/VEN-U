@@ -62,6 +62,12 @@ CREATE TABLE "venues" (
   "is_active" boolean
 );
 
+CREATE TABLE "event_dates"(
+  "id" uuid ,
+  "event_id" uuid,
+  "date"
+
+);
 -- CREATE TABLE "amenities" (
 --   "id" uuid  DEFAULT uuid_generate_v4 () PRIMARY KEY,
 --   "venue_id" uuid UNIQUE,
@@ -97,14 +103,14 @@ ALTER  TABLE "venue_amenities" ADD FOREIGN KEY("amenity_id") REFERENCES "ameniti
 
 
 
-CREATE TABLE "pictures_events" (
+CREATE TABLE "events_pictures" (
   "id" uuid  DEFAULT uuid_generate_v4 () PRIMARY KEY,
   "event_id" uuid,
   "pic_url" varchar(250),
   "is_active" boolean
 );
 
-CREATE TABLE "pictures_venues" (
+CREATE TABLE "venues_pictures" (
   "id" uuid  DEFAULT uuid_generate_v4 () PRIMARY KEY,
   "venue_id" uuid,
   "pic_url" varchar(250),
@@ -118,6 +124,9 @@ CREATE TABLE "customer" (
   "purchase_status" boolean
 );
 
+CREATE TABLE "dates"(
+    "id" uuid 
+);
 
 
 ALTER TABLE "venues" ADD FOREIGN KEY ("host_id") REFERENCES "users" ("id");
@@ -359,3 +368,14 @@ insert into amenities (name) values ('WiFi');
 -- INSERT INTO customer(user_id,event_id,purchase_status) VALUES('','','F');
 -- INSERT INTO customer(user_id,event_id,purchase_status) VALUES('','','F');
 -- INSERT INTO customer(user_id,event_id,purchase_status) VALUES('','','F');
+
+
+
+
+
+
+
+
+-- RENAME PICTURES VENUES TO VENUE_PICTURES
+
+

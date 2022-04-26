@@ -129,8 +129,21 @@ app.get('/venues', (req, res) => {
 
     /* pool method makes request for venue information */
 
+    getVenuesQuery = `SELECT
+                        v.id, 
+                        v.name, 
+                        v.location, 
+                        v.price, 
+                        v.host_id, 
+                        p.pic_url
+                    FROM
+                        venues AS v JOIN venues_pictures AS p 
+                    ON
+                        v.id = p.venue_id
 
-    pool.query('SELECT * FROM venues', (error, results) => {
+                    ;`
+
+    pool.query(getVenuesQuery, (error, results) => {
         if (error) {
 
             res.status(500)
@@ -150,7 +163,7 @@ app.get('/venues/:venue_id', (req, res) => {
     /* pool method makes request for venue information */
     const { venue_id } = req.params
 
-    getVenueQuery = 'SELECT * FROM venues  $1'
+    getVenueQuery = 'SELECT * FROM venues WHERE id = $1;'
 
     pool.query(getVenueQuery, [venue_id], (error, results) => {
         if (error) {
@@ -159,7 +172,7 @@ app.get('/venues/:venue_id', (req, res) => {
             throw error
         }
         else {
-            console.log('pool query')
+
             res.status(200).json(results.rows)
         }
     })
@@ -186,12 +199,12 @@ app.patch('/venues/:venue_id', (req, res) => {
 
 })
 
-app.get('/venues/:venue_id/dates', (req, res) => {
+app.get('/venues/:venue_id/eventDates', (req, res) => {
 
     /* pool method makes request for venue information */
     const { venue_id } = req.params
 
-    getVenuesDatesQuery = 'SELECT * FROM venues WHERE '
+    getVenuesDatesQuery = 'SELECT start_date FROM events  WHERE venue_id = $1'
 
     pool.query(getVenuesDatesQuery, [venue_id], (error, results) => {
         if (error) {
@@ -230,13 +243,13 @@ app.get('/amenities/:venueId', (req, res) => {
 
 })
 
-app.get('/pictures/events/:eventId', (req, res) => {
+app.get('/pictures/events/:event_id', (req, res) => {
 
-    const { eventId } = req.params
+    const { event_id } = req.params
+    console.log('req params', req.params)
+    getEventPictureQuery = `SELECT pic_url FROM events_pictures WHERE event_id = $1 ;`
 
-    getEventPictureQuery = `SELECT * FROM pictures ;`
-
-    pool.query(getEventPictureQuery, (error, results) => {
+    pool.query(getEventPictureQuery, [event_id], (error, results) => {
         if (error) {
 
             res.status(500)
@@ -253,9 +266,9 @@ app.get('/pictures/venues/:venue_id', (req, res) => {
 
     const { venue_id } = req.params
 
-    getVenuePictureQuery = `SELECT * FROM pictures ;`
+    getVenuePictureQuery = `SELECT * FROM pictures_venues WHERE venue_id = $1 ;`
 
-    pool.query(getVenuePictureQuery, [venueId], (error, results) => {
+    pool.query(getVenuePictureQuery, [venue_id], (error, results) => {
         if (error) {
 
             res.status(500)
@@ -274,7 +287,25 @@ app.get('/events', (req, res) => {
 
 
 
-    getEventsQuery = `SELECT * FROM events ;`
+    getEventsQuery = `SELECT
+                            e.id, 
+                            e.name, 
+                            e.location, 
+                            e.bookee_id,
+                            e.type,
+                            e.start_date,
+                            e.duration,
+                            e.start_time,
+                            e.venue_id,
+                            e.is_active,
+                            e.entry_price,  
+                            p.pic_url
+                        FROM
+                            events AS e JOIN events_pictures AS p 
+                        ON
+                            e.id = p.event_id
+
+                        ;`
 
     pool.query(getEventsQuery, (error, results) => {
         if (error) {
@@ -291,18 +322,18 @@ app.get('/events', (req, res) => {
 })
 app.get('/events/:event_id', (req, res) => {
 
+    const { event_id } = req.params;
 
+    getEventQuery = `SELECT * FROM events  WHERE id = $1 ;`
 
-    getEventQuery = `SELECT * FROM events ;`
-
-    pool.query(getEventQuery, (error, results) => {
+    pool.query(getEventQuery, [event_id], (error, results) => {
         if (error) {
 
             res.status(500)
             throw error
         }
         else {
-
+            console.log('success event db sql query')
             res.status(200).json(results.rows)
         }
     })
