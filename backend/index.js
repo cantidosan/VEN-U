@@ -152,6 +152,28 @@ app.get('/venues', (req, res) => {
     })
 
 })
+app.put('/venues', (req, res) => {
+
+    /* pool method makes request for venue information */
+
+    const { venueName, venueLocation, venuePrice, host_id, created_at, updated_at, is_active } = req.body;
+    insertVenueQuery = `INSERT INTO venues(name, location, price, host_id, created_at, updated_at, is_active)
+                        VALUES($1,$2,$3,$4,$5,$6,$7);`
+
+    pool.query(insertVenueQuery, [venueName, venueLocation, venuePrice, host_id, created_at, updated_at, is_active], (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+
 
 app.get('/venues/:venue_id', (req, res) => {
 
@@ -187,6 +209,8 @@ app.get('/venues/:venue_id', (req, res) => {
     })
 
 })
+
+
 app.patch('/venues/:venue_id', (req, res) => {
 
     /* pool method makes request for venue information */
@@ -201,7 +225,7 @@ app.patch('/venues/:venue_id', (req, res) => {
             throw error
         }
         else {
-            console.log('pool query')
+
             res.status(200).json(results.rows)
         }
     })
@@ -212,7 +236,9 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
 
     /* pool method makes request for venue information */
     const { venue_id } = req.params
-    console.log('venueId date call', venue_id)
+
+    console.log('venueId server hit', venue_id)
+
     getVenuesDatesQuery = `SELECT start_date 
                             FROM events  
                             WHERE venue_id = $1
@@ -258,7 +284,7 @@ app.get('/amenities/:venue_id', (req, res) => {
 app.get('/pictures/events/:event_id', (req, res) => {
 
     const { event_id } = req.params
-    console.log('req params', req.params)
+
     getEventPictureQuery = `SELECT pic_url FROM events_pictures WHERE event_id = $1 ;`
 
     pool.query(getEventPictureQuery, [event_id], (error, results) => {
@@ -366,7 +392,7 @@ app.get('/events/:event_id', (req, res) => {
             throw error
         }
         else {
-            console.log('success event db sql query')
+
             res.status(200).json(results.rows[0])
         }
     })
@@ -384,7 +410,7 @@ app.patch('/events/:event_id', (req, res) => {
     } = req.body;
 
     const { event_id } = req.params;
-    console.log(' to be patched eventid', event_id)
+
 
     updateEventQuery = `UPDATE events 
                         SET  name = $1,
