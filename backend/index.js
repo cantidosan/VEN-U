@@ -69,11 +69,6 @@ checkAuthenticated = (req, res, next) => {
     console.log('header details', req.headers.sessionid)
 
 
-
-
-
-
-
     // This checks if req.sessions.passport.user exists
 
     // if (req.isAuthenticated()) {
@@ -162,8 +157,22 @@ app.get('/venues/:venue_id', (req, res) => {
 
     /* pool method makes request for venue information */
     const { venue_id } = req.params
+    console.log('venueId', venue_id)
 
-    getVenueQuery = 'SELECT * FROM venues WHERE id = $1;'
+    getVenueQuery = `SELECT 
+                        v.id,
+                        v.name,
+                        v.location,
+                        v.price,
+                        v.host_id,
+                        p.pic_url
+                    FROM 
+                        venues AS v JOIN venues_pictures AS p
+                    ON
+                        v.id = p.venue_id
+
+                        WHERE v.id = $1;`
+
 
     pool.query(getVenueQuery, [venue_id], (error, results) => {
         if (error) {
@@ -172,8 +181,8 @@ app.get('/venues/:venue_id', (req, res) => {
             throw error
         }
         else {
-
-            res.status(200).json(results.rows)
+            // console.log('venue query venueid results rows', results.rows[0])
+            res.status(200).json(results.rows[0])
         }
     })
 
@@ -182,10 +191,10 @@ app.patch('/venues/:venue_id', (req, res) => {
 
     /* pool method makes request for venue information */
     const { venue_id } = req.params
+    const { venueName, venueLocation, venuePrice } = req.body;
+    updateVenueQuery = 'UPDATE venues SET name = $1,location= $2, price = $3 WHERE id = $4 ;'
 
-    updateVenueQuery = 'UPDATE * FROM venues ;'
-
-    pool.query(updateVenueQuery, [venue_id], (error, results) => {
+    pool.query(updateVenueQuery, [venueName, venueLocation, venuePrice, venue_id], (error, results) => {
         if (error) {
 
             res.status(500)
@@ -203,8 +212,11 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
 
     /* pool method makes request for venue information */
     const { venue_id } = req.params
-
-    getVenuesDatesQuery = 'SELECT start_date FROM events  WHERE venue_id = $1'
+    console.log('venueId date call', venue_id)
+    getVenuesDatesQuery = `SELECT start_date 
+                            FROM events  
+                            WHERE venue_id = $1
+                            `
 
     pool.query(getVenuesDatesQuery, [venue_id], (error, results) => {
         if (error) {
@@ -223,9 +235,9 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
 
 
 
-app.get('/amenities/:venueId', (req, res) => {
+app.get('/amenities/:venue_id', (req, res) => {
 
-    const { venueId } = req.params
+    const { venue_id } = req.params
 
     getVenueAmenitiesQuery = `SELECT * FROM amenities ;`
 
@@ -324,7 +336,28 @@ app.get('/events/:event_id', (req, res) => {
 
     const { event_id } = req.params;
 
-    getEventQuery = `SELECT * FROM events  WHERE id = $1 ;`
+    getEventQuery = `SELECT 
+                            e.id, 
+                            e.name, 
+                            e.location, 
+                            e.bookee_id,
+                            e.type,
+                            e.start_date,
+                            e.duration,
+                            e.start_time,
+                            e.venue_id,
+                            e.is_active,
+                            e.entry_price,  
+                            p.pic_url
+
+                        FROM
+                        events AS e JOIN events_pictures AS p 
+                    ON
+                        e.id = p.event_id
+    
+    
+                        WHERE e.id = $1 
+                        ;`
 
     pool.query(getEventQuery, [event_id], (error, results) => {
         if (error) {
@@ -334,28 +367,54 @@ app.get('/events/:event_id', (req, res) => {
         }
         else {
             console.log('success event db sql query')
-            res.status(200).json(results.rows)
+            res.status(200).json(results.rows[0])
         }
     })
 
 })
 app.patch('/events/:event_id', (req, res) => {
 
+    const {
+        eventName,
+        eventLocation,
+        eventPrice,
+        startDate,
+        startTime,
+        eventType
+    } = req.body;
 
+    const { event_id } = req.params;
+    console.log(' to be patched eventid', event_id)
 
-    updateEventQuery = `UPDATE * FROM events ;`
+    updateEventQuery = `UPDATE events 
+                        SET  name = $1,
+                        location = $2,
+                        entry_price = $3,
+                        start_date = $4,
+                        start_time = $5,
+                        type = $6
+                        WHERE id = $7;`
 
-    pool.query(getEventQuery, (error, results) => {
-        if (error) {
+    pool.query(updateEventQuery,
+        [
+            eventName,
+            eventLocation,
+            eventPrice,
+            startDate,
+            startTime,
+            eventType,
+            event_id
+        ], (error, results) => {
+            if (error) {
 
-            res.status(500)
-            throw error
-        }
-        else {
+                res.status(500)
+                throw error
+            }
+            else {
 
-            res.status(200).json(results.rows)
-        }
-    })
+                res.status(200).json(results.rows)
+            }
+        })
 
 })
 
