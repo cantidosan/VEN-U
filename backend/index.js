@@ -458,11 +458,11 @@ app.patch('/events/:event_id', (req, res) => {
 
 app.get('/events/related/:venue_id', (req, res) => {
 
+    const { venue_id } = req.params;
 
+    getUpcomingEventsQuery = `SELECT * FROM events where venue_id = $1  AND is_active = $2  ;`
 
-    getEventsQuery = `SELECT * FROM events ;`
-
-    pool.query(getEventsQuery, (error, results) => {
+    pool.query(getUpcomingEventsQuery, [venue_id, 'true'], (error, results) => {
         if (error) {
 
             res.status(500)
@@ -480,9 +480,9 @@ app.get('/events/pending/:venue_id', (req, res) => {
 
     const { venue_id } = req.params
 
-    unapprovedEventQuery = `SELECT * FROM events ;`
+    unapprovedEventQuery = `SELECT * FROM events where venue_id = $1 AND is_active = $2 ;`
 
-    pool.query(unapprovedEventQuery, (error, results) => {
+    pool.query(unapprovedEventQuery, [venue_id, 'false'], (error, results) => {
         if (error) {
 
             res.status(500)
