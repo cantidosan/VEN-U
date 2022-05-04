@@ -316,7 +316,7 @@ app.get('/pictures/venues/:venue_id', (req, res) => {
 
     const { venue_id } = req.params
 
-    getVenuePictureQuery = `SELECT * FROM pictures_venues WHERE venue_id = $1 ;`
+    getVenuePictureQuery = `SELECT * FROM venues_pictures WHERE venue_id = $1 ;`
 
     pool.query(getVenuePictureQuery, [venue_id], (error, results) => {
         if (error) {
