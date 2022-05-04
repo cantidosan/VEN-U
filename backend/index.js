@@ -215,33 +215,45 @@ app.patch('/venues/:venue_id', (req, res) => {
 
     /* pool method makes request for venue information */
     const { venue_id } = req.params
-    const { venueName, venueLocation, venuePrice } = req.body;
+    const {
+        venueName,
+        venueLocation,
+        venuePrice
+    } = req.body;
     updateVenueQuery = 'UPDATE venues SET name = $1,location= $2, price = $3 WHERE id = $4 ;'
 
-    pool.query(updateVenueQuery, [venueName, venueLocation, venuePrice, venue_id], (error, results) => {
-        if (error) {
+    pool.query(updateVenueQuery,
+        [
+            venueName,
+            venueLocation,
+            venuePrice,
+            venue_id
+        ]
+        , (error, results) => {
+            if (error) {
 
-            res.status(500)
-            throw error
-        }
-        else {
+                res.status(500)
+                throw error
+            }
+            else {
 
-            res.status(200).json(results.rows)
-        }
-    })
+                res.status(200).json(results.rows)
+            }
+        })
 
 })
 
 app.get('/venues/:venue_id/eventDates', (req, res) => {
 
     /* pool method makes request for venue information */
+
     const { venue_id } = req.params
 
-    console.log('venueId server hit', venue_id)
+    console.log('eventDates for venueId', venue_id)
 
     getVenuesDatesQuery = `SELECT start_date 
                             FROM events  
-                            WHERE venue_id = $1
+                            WHERE venue_id = $1;
                             `
 
     pool.query(getVenuesDatesQuery, [venue_id], (error, results) => {
@@ -251,7 +263,7 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
             throw error
         }
         else {
-            console.log('pool query')
+            console.log('returning success querry info for eventDates')
             res.status(200).json(results.rows)
         }
     })
