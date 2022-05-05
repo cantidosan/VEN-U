@@ -66,7 +66,8 @@ checkAuthenticated = (req, res, next) => {
 
     // console.log('req.session', req.session)
 
-    console.log('header details', req.headers.sessionid)
+
+
 
 
     // This checks if req.sessions.passport.user exists
@@ -145,7 +146,7 @@ app.get('/venues', (req, res) => {
             throw error
         }
         else {
-            console.log('success qry res')
+
             res.status(200).json(results.rows)
             // res.status(200).json(results.rows)
         }
@@ -179,7 +180,6 @@ app.get('/venues/:venue_id', (req, res) => {
 
     /* pool method makes request for venue information */
     const { venue_id } = req.params
-    console.log('venueId', venue_id)
 
     getVenueQuery = `SELECT 
                         v.id,
@@ -249,7 +249,6 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
 
     const { venue_id } = req.params
 
-    console.log('eventDates for venueId', venue_id)
 
     getVenuesDatesQuery = `SELECT start_date 
                             FROM events  
@@ -263,7 +262,7 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
             throw error
         }
         else {
-            console.log('returning success querry info for eventDates')
+
             res.status(200).json(results.rows)
         }
     })
@@ -277,9 +276,22 @@ app.get('/amenities/:venue_id', (req, res) => {
 
     const { venue_id } = req.params
 
-    getVenueAmenitiesQuery = `SELECT * FROM amenities ;`
+    getVenueAmenitiesQuery = `
+                              SELECT 
+                                    name 
+                              FROM 
+                                    amenities
+                              INNER JOIN 
+                                    venue_amenities
+                              ON 
+                                    amenities.id = venue_amenities.amenity_id
+                              WHERE 
+                                    venue_id = $1
+                              ;
+                            `
 
-    pool.query(getVenueAmenitiesQuery, [venueId], (error, results) => {
+    pool.query(getVenueAmenitiesQuery, [venue_id], (error, results) => {
+
         if (error) {
 
             res.status(500)

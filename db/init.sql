@@ -93,7 +93,7 @@ CREATE TABLE "amenities"(
 CREATE TABLE "venue_amenities"(
 
     "venue_id" uuid ,
-    "amenity_id" uuid UNIQUE,
+    "amenity_id" uuid ,
     "is_active" BOOLEAN,
     PRIMARY KEY(venue_id,amenity_id)
 );
@@ -316,9 +316,33 @@ insert into amenities (name) values ('WiFi');
 -- insert into venue_amenities (venue_id,amenity_id, is_active ) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5', '80e5964f-6409-41c1-a620-bdc329cd5def',false);
 -- insert into venue_amenities (venue_id,amenity_id, is_active ) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5', 'cdd5fcb7-7e93-4e45-b4e3-eb1f6b8a96cb',false);
 -- insert into venue_amenities (venue_id,amenity_id, is_active ) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5','25ab1821-07db-41db-b384-2950ef4f754a',false);
+-- insert into venue_amenities (venue_id,amenity_id, is_active ) values ('b00f31aa-2e36-43a0-b672-a3913d9c2ad5','10344141-d8ed-47b7-a1a1-91ddbeaa8808',false);
 
+-- TO BE COPIED INTO DB
 
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('d3136f4b-e852-4be1-94db-13245240e295', '1ff4786d-cd58-47a5-9683-a48568ae1f3d',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('d3136f4b-e852-4be1-94db-13245240e295', '80e5964f-6409-41c1-a620-bdc329cd5def',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('d3136f4b-e852-4be1-94db-13245240e295', 'cdd5fcb7-7e93-4e45-b4e3-eb1f6b8a96cb',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('d3136f4b-e852-4be1-94db-13245240e295', '25ab1821-07db-41db-b384-2950ef4f754a',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('d3136f4b-e852-4be1-94db-13245240e295', '10344141-d8ed-47b7-a1a1-91ddbeaa8808',true);
 
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('c385fc4b-070a-4fca-a512-11f219f60b71', '1ff4786d-cd58-47a5-9683-a48568ae1f3d',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('c385fc4b-070a-4fca-a512-11f219f60b71', '80e5964f-6409-41c1-a620-bdc329cd5def',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('c385fc4b-070a-4fca-a512-11f219f60b71', 'cdd5fcb7-7e93-4e45-b4e3-eb1f6b8a96cb',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('c385fc4b-070a-4fca-a512-11f219f60b71', '25ab1821-07db-41db-b384-2950ef4f754a',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('c385fc4b-070a-4fca-a512-11f219f60b71', '10344141-d8ed-47b7-a1a1-91ddbeaa8808',true);
+
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('29594aa7-9160-4344-96b4-ccca63e15bf0', '1ff4786d-cd58-47a5-9683-a48568ae1f3d',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('29594aa7-9160-4344-96b4-ccca63e15bf0', '80e5964f-6409-41c1-a620-bdc329cd5def',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('29594aa7-9160-4344-96b4-ccca63e15bf0', 'cdd5fcb7-7e93-4e45-b4e3-eb1f6b8a96cb',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('29594aa7-9160-4344-96b4-ccca63e15bf0', '25ab1821-07db-41db-b384-2950ef4f754a',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('29594aa7-9160-4344-96b4-ccca63e15bf0', '10344141-d8ed-47b7-a1a1-91ddbeaa8808',true);
+
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('44c10af5-79b7-4efc-810e-a39343f6af20', '1ff4786d-cd58-47a5-9683-a48568ae1f3d',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('44c10af5-79b7-4efc-810e-a39343f6af20', '80e5964f-6409-41c1-a620-bdc329cd5def',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('44c10af5-79b7-4efc-810e-a39343f6af20', 'cdd5fcb7-7e93-4e45-b4e3-eb1f6b8a96cb',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('44c10af5-79b7-4efc-810e-a39343f6af20', '25ab1821-07db-41db-b384-2950ef4f754a',true);
+-- insert into venue_amenities (venue_id, amenity_id, is_active) values ('44c10af5-79b7-4efc-810e-a39343f6af20', '10344141-d8ed-47b7-a1a1-91ddbeaa8808',true);
 
 
 
