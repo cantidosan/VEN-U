@@ -361,7 +361,9 @@ app.get('/events', (req, res) => {
                             e.venue_id,
                             e.is_active,
                             e.entry_price,  
+                            e.promotional_details,
                             p.pic_url
+                            
                         FROM
                             events AS e JOIN events_pictures AS p 
                         ON
