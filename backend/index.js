@@ -121,6 +121,64 @@ app.post('/login', function (req, res, next) {
 
 });
 
+app.post('/signup', function (req, res, next) {
+    const saltRounds = 8
+    const { password, userRole, username, } = req.body
+    const userEmail = `${username}@gmail.com`
+    const firstName = `${username}_fname`
+    const lastName = `${username}_lname`
+    const created_at = new Date()
+    const updated_at = new Date()
+    const is_active = true
+    const phone = Math.random().toString().slice(2, 11);
+
+    console.log('inside signup server')
+
+    signUpQuery = ` INSERT INTO 
+                         
+                    USERS(username,
+                        first_name,
+                        last_name,
+                        created_at,
+                        email,
+                        password,
+                        updated_at,
+                        is_active,
+                        user_type,
+                        phone)
+                    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+        ;`
+    bcrypt.hash(password, saltRounds, function (err, hash) {
+
+        pool.query(signUpQuery,
+            [username,
+                firstName,
+                lastName,
+                created_at,
+                userEmail,
+                hash,
+                updated_at,
+                true,
+                userRole,
+                phone
+            ], (error, results) => {
+
+                if (error) {
+
+                    res.status(500)
+                    throw error
+                }
+                else {
+
+                    res.status(200).json(results.rows)
+                    // res.status(200).json(results.rows)
+                }
+            })
+    });
+
+});
+
+
 app.get('/venues', (req, res) => {
 
     /* pool method makes request for venue information */
