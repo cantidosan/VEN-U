@@ -129,10 +129,11 @@ app.post('/signup', function (req, res, next) {
     const lastName = `${username}_lname`
     const created_at = new Date()
     const updated_at = new Date()
+    const last_logged = new Date()
     const is_active = true
     const phone = Math.random().toString().slice(2, 11);
 
-    console.log('inside signup server')
+
 
     signUpQuery = ` INSERT INTO 
                          
@@ -142,11 +143,12 @@ app.post('/signup', function (req, res, next) {
                         created_at,
                         email,
                         password,
+                        last_logged,
                         updated_at,
                         is_active,
                         user_type,
                         phone)
-                    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+                    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
         ;`
     bcrypt.hash(password, saltRounds, function (err, hash) {
 
@@ -157,6 +159,7 @@ app.post('/signup', function (req, res, next) {
                 created_at,
                 userEmail,
                 hash,
+                last_logged,
                 updated_at,
                 true,
                 userRole,
@@ -329,10 +332,12 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
 
 
 
-
+// TODO THE AMENITIES COMPONENT CRASHES ON THE EDIT PAGES, INVESTIGATE
 app.get('/amenities/:venue_id', (req, res) => {
 
     const { venue_id } = req.params
+
+    console.log('venue ID server call', venue_id)
 
     getVenueAmenitiesQuery = `
                               SELECT 
@@ -342,7 +347,7 @@ app.get('/amenities/:venue_id', (req, res) => {
                               INNER JOIN 
                                     venue_amenities
                               ON 
-                                    amenities.id = venue_amenities.amenity_id
+                                    venue_amenities.amenity_id = amenities.id 
                               WHERE 
                                     venue_id = $1
                               ;
@@ -356,7 +361,7 @@ app.get('/amenities/:venue_id', (req, res) => {
             throw error
         }
         else {
-
+            console.log('amen response good sign')
             res.status(200).json(results.rows)
         }
     })
@@ -460,14 +465,15 @@ app.get('/events/:event_id', (req, res) => {
                             e.entry_price,  
                             p.pic_url
 
-                        FROM
+                    FROM
                         events AS e JOIN events_pictures AS p 
                     ON
                         e.id = p.event_id
     
     
-                        WHERE e.id = $1 
-                        ;`
+                    WHERE 
+                        e.id = $1 
+                    ;`
 
     pool.query(getEventQuery, [event_id], (error, results) => {
         if (error) {
