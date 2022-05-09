@@ -101,7 +101,7 @@ app.post('/login', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) { return next(err) }
         if (!user) { return res.json({ message: info.message }) }
-        console.log('user object details', user)
+
         req.login(user, function (err) {
 
             if (err) {
@@ -109,10 +109,18 @@ app.post('/login', function (req, res, next) {
                     message: "Unauthorized Credentials!"
                 }))
             }
+            console.log(req.sessionID)
+            res.json({
+
+                "session": req.session,
+                "user": req.user,
+                "sessionId": req.sessionID
+
+            });
         })
         // console.log('sess', req.cookie)
 
-        res.json(req.sessionID);
+        // res.json(req.sessionID);
         // res.json(req.user);
 
 
@@ -337,7 +345,7 @@ app.get('/amenities/:venue_id', (req, res) => {
 
     const { venue_id } = req.params
 
-    console.log('venue ID server call', venue_id)
+
 
     getVenueAmenitiesQuery = `
                               SELECT 
@@ -361,7 +369,7 @@ app.get('/amenities/:venue_id', (req, res) => {
             throw error
         }
         else {
-            console.log('amen response good sign')
+
             res.status(200).json(results.rows)
         }
     })
