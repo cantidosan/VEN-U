@@ -109,7 +109,7 @@ app.post('/login', function (req, res, next) {
                     message: "Unauthorized Credentials!"
                 }))
             }
-            console.log(req.sessionID)
+            // console.log(req.sessionID)
             res.json({
 
                 "session": req.session,
@@ -337,10 +337,50 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
     })
 
 })
+app.get('/amenities', (req, res) => {
+
+    getAmenitiesQuery = `SELECT name from amenities;`
+
+    pool.query(getAmenitiesQuery, (error, results) => {
+
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    }
+    )
+
+})
+
+app.get('/users/:username', (req, res) => {
+
+    const { username } = req.params
+    console.log('username', username)
+    getAmenitiesQuery = `SELECT id from users WHERE username = $1;`
+
+    pool.query(getAmenitiesQuery, [username], (error, results) => {
+
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    }
+    )
+
+})
 
 
 
-// TODO THE AMENITIES COMPONENT CRASHES ON THE EDIT PAGES, INVESTIGATE
 app.get('/amenities/:venue_id', (req, res) => {
 
     const { venue_id } = req.params
