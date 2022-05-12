@@ -49,6 +49,8 @@ app.use(passport.authenticate('session'));
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+
 app.use(cookieParser("secret"));
 app.use(flash());
 
@@ -59,15 +61,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
+
 app.options('*', cors())
 
 
 checkAuthenticated = (req, res, next) => {
 
     // console.log('req.session', req.session)
-
-
-
 
 
     // This checks if req.sessions.passport.user exists
@@ -90,9 +90,6 @@ checkAuthenticated = (req, res, next) => {
     // }))
     next();
 }
-
-
-
 
 // WE HAD TO PROVIDE THE FORM DATA AS AN OBJECT { "username":usernamevar , "password":passwordvar}
 //
@@ -222,25 +219,51 @@ app.get('/venues', (req, res) => {
     })
 
 })
-app.put('/venues', (req, res) => {
+app.post('/venues', (req, res) => {
 
-    /* pool method makes request for venue information */
+    /*  */
 
-    const { venueName, venueLocation, venuePrice, host_id, created_at, updated_at, is_active } = req.body;
-    insertVenueQuery = `INSERT INTO venues(name, location, price, host_id, created_at, updated_at, is_active)
-                        VALUES($1,$2,$3,$4,$5,$6,$7);`
 
-    pool.query(insertVenueQuery, [venueName, venueLocation, venuePrice, host_id, created_at, updated_at, is_active], (error, results) => {
-        if (error) {
+    const {
+        venueName,
+        venueLocation,
+        venuePrice,
+        host_id,
+        isActive
+    } = req.body.data;
 
-            res.status(500)
-            throw error
-        }
-        else {
+    insertVenueQuery = `INSERT INTO venues(
+                         name,
+                         location, 
+                         price, 
+                         host_id,                     
+                         is_active)
+                        VALUES($1,$2,$3,$4,$5)
+                        RETURNING id;`
 
-            res.status(200).json(results.rows)
-        }
-    })
+
+
+    pool.query(insertVenueQuery,
+        [
+            venueName,
+            venueLocation,
+            venuePrice,
+            host_id,
+            true
+        ],
+        (error, results) => {
+
+            if (error) {
+                console.log('no dice')
+                res.status(500)
+                throw error
+
+            }
+            else {
+
+                res.status(200).json(results.rows)
+            }
+        })
 
 })
 
@@ -273,7 +296,7 @@ app.get('/venues/:venue_id', (req, res) => {
         }
         else {
             // console.log('venue query venueid results rows', results.rows[0])
-            res.status(200).json(results.rows[0])
+            res.status(200).json(results.rows)
         }
     })
 
@@ -339,7 +362,7 @@ app.get('/venues/:venue_id/eventDates', (req, res) => {
 })
 app.get('/amenities', (req, res) => {
 
-    getAmenitiesQuery = `SELECT name from amenities;`
+    getAmenitiesQuery = `SELECT name,id from amenities;`
 
     pool.query(getAmenitiesQuery, (error, results) => {
 
@@ -402,6 +425,36 @@ app.get('/amenities/:venue_id', (req, res) => {
                             `
 
     pool.query(getVenueAmenitiesQuery, [venue_id], (error, results) => {
+
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+
+app.post('/amenities/:venueId', (req, res) => {
+
+    const { venueId } = req.params
+    const { id, is_active } = req.body.data
+    console.log('venueId', venueId)
+    console.log('amenity id', id)
+
+    insertVenueAmenitiesQuery =
+        `
+                              INSERT INTO 
+                                venue_amenities(venue_id,amenity_id,is_active) 
+                              VALUES($1,$2,$3)
+                              ;
+                            `
+
+    pool.query(insertVenueAmenitiesQuery, [venueId, id, is_active], (error, results) => {
 
         if (error) {
 
