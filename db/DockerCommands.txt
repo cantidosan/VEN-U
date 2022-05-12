@@ -1,0 +1,10 @@
+DOCKER COMMAND TO PERFORM  PG DUMP
+
+SCHEMA ONLY
+#docker compose exec db bash -c "POSTGRES_PASSWORD=password pg_dump --username postgres --schema-only --no-owner venue" > ./venuesSchema.sql
+
+ALL DATA
+docker compose exec db bash -c "POSTGRES_PASSWORD=password pg_dump --username postgres  --no-owner venue" > ./venuesSchema.sql
+
+DOCKER COMMAND TO EXECUTE A SQL LOCAL SQL FILE
+#docker compose exec db psql -U postgres -f /docker-entrypoint-initdb.d/init.sql
