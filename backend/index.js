@@ -508,6 +508,42 @@ app.get('/pictures/venues/:venue_id', (req, res) => {
 
 })
 
+app.post('/pictures/venues/:venue_id', (req, res) => {
+
+    const { venue_id } = req.params
+    const { imageLink, isActive } = req.body.data
+
+    console.log('link', imageLink)
+
+    createVenuePictureQuery = `INSERT INTO
+                                venues_pictures
+                            (
+                                venue_id,
+                                pic_url,
+                                is_active
+                            )
+                            VALUES(
+                                    $1,
+                                    $2,
+                                    $3
+                                   ) 
+                                
+                                ;`
+
+    pool.query(createVenuePictureQuery, [venue_id, imageLink, isActive], (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+
 
 app.get('/events', (req, res) => {
 
