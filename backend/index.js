@@ -731,6 +731,68 @@ app.get('/venueIssues/:venue_id', (req, res) => {
 
 })
 
+app.post('/events', (req, res) => {
+
+    const created_at = new Date();
+    const {
+        eventName,
+        eventLocation,
+        eventPrice,
+        startDate,
+        startTime,
+        duration,
+        promotionalDetails,
+        venue_id,
+        is_active
+    } = req.body
+
+    postEventQuery = `INSERT INTO events
+                        (
+                            name,
+                            location,
+                            bookee_id,
+                            created_at,
+                            type,
+                            entry_price,
+                            start_date,
+                            duration,
+                            start_time,
+                            promotional_details,
+                            venue_id,
+                            is_active
+                            
+                        )
+                        VALUES(
+                            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12
+                        )
+
+
+
+                    `
+    pool.query(postEventQuery, [
+        eventName,
+        eventLocation,
+        eventPrice,
+        startDate,
+        startTime,
+        duration,
+        promotionalDetails,
+        venue_id,
+        isActive
+
+    ],
+        (error, results) => {
+            if (error) {
+
+                res.status(500)
+                throw error
+            }
+            else {
+
+                res.status(200).json(results.rows)
+            }
+        })
+})
 
 
 
