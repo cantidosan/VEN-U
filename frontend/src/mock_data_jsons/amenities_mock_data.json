@@ -1,0 +1,27 @@
+[
+    {
+        "amenity_name": "Parking",
+        "venue_id": 3,
+        "availability": false
+    },
+    {
+        "amenity_name": "Blankets",
+        "venue_id": 3,
+        "availability": false
+    },
+    {
+        "amenity_name": "Food",
+        "venue_id": 2,
+        "availability": true
+    },
+    {
+        "amenity_name": "Electricity",
+        "venue_id": 7,
+        "availability": false
+    },
+    {
+        "amenity_name": "WI-Fi",
+        "venue_id": 6,
+        "availability": true
+    }
+]
