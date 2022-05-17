@@ -16,25 +16,33 @@ React Pwa Similar to Air BnB in concept but it is a platform that any usable spa
 
 ## Technologies
 Project is created with:
-*   "@mapbox/mapbox-sdk": "^0.13.2",
- *   "cloudinary": "^1.27.0",
-  *  "connect-flash": "^0.1.1",
-   * "dotenv": "^10.0.0",
-    *"ejs": "^3.1.6",
-*    "ejs-mate": "^3.0.0",
- *   "express": "^4.17.1",
-  *  "express-session": "^1.17.2",
-   * "joi": "^17.4.2",
-*    "mapbox-geocoding": "^0.1.5",
- *   "method-override": "^3.0.0",
-  *  "mongoose": "^6.0.4",
-   * "morgan": "^1.10.0",
-*    "multer": "^1.4.3",
- *   "multer-storage-cloudinary": "^4.0.0",
-  *  "nodemon": "^2.0.12",
-   * "passport": "^0.4.1",
-    *"passport-local": "^1.0.0",
-  *  "passport-local-mongoose": "^6.1.0"
+
+    * "@testing-library/jest-dom": "^5.16.3",
+    * "@testing-library/react": "^12.1.4",
+    * "@testing-library/user-event": "^13.5.0",
+    * "axios": "^0.27.2",
+    * "bootstrap": "^5.1.3",
+    * "date-fns": "^2.28.0",
+    * "mapbox-gl": "^2.8.0",
+    * "react": "^18.0.0",
+    * "react-bootstrap": "^2.2.3",
+    * "react-calendar": "^3.7.0",
+    * "react-dom": "^18.0.0",
+    * "react-router-dom": "^6.3.0",
+    * "bcrypt": "^5.0.1",
+    * "body": "^5.1.0",
+    * "body-parser": "^1.20.0",
+    * "connect-pg-simple": "^7.0.0",
+    * "cookie-parser": "^1.4.6",
+    * "cors": "^2.8.5",
+    * "express": "^4.17.3",
+    * "express-flash": "^0.0.2",
+    * "express-session": "^1.17.2",
+    * "multer": "^1.4.4",
+    * "parser": "^0.1.4",
+    * "passport": "^0.5.2",
+    * "passport-local": "^1.0.0",
+    * "pg": "^8.7.3"
 
 
 ## Setup
