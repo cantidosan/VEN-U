@@ -12,10 +12,7 @@ React Pwa Similar to Air BnB in concept but it is a platform that any usable spa
 
 ## General info
 <p>This project, while based on an already established sharing platform model such as AirBnB's short term home rental. It takes the concept one step further 
-  and comodifies any usable space that the HOST in question owns. The use cases that immediatley come to mind would be the renting of a parking lot for a multi
-  hour event </p>
-![parkinglot party](https://user-images.githubusercontent.com/82469261/168862753-4ab906f6-84f1-4788-b98d-c580830f668e.jpg)
-
+  and commodifies any usable space that the HOST in question owns. The use cases that immediatley come to mind would be the renting of a parking lot for a multi-hour event </p>
 
 ## Technologies
 Project is created with:
