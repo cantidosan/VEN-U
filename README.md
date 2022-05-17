@@ -48,8 +48,10 @@ Project is created with:
 ## Setup
 
 ```
-$ cd ../YelpApp
-$ npm install
+$ cd ../Ven-u
+$ docker compose up
+$ cd frontend
+$ cd ven-u
 $ npm start
 ```
 
