@@ -17,6 +17,8 @@ React Pwa Similar to Air BnB in concept but it is a platform that any usable spa
 
 ## Figma mockup
 
+![ezgif com-gif-maker(3)](https://user-images.githubusercontent.com/82469261/168870862-8b090f40-6961-4688-afac-c5f532d276ba.gif)
+
 
 
 ## Technologies
