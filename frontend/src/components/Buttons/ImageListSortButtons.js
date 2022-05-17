@@ -12,7 +12,7 @@ export default function ImageListSortButtons() {
     let location = useLocation();
 
     const [{ userRole, username }, dispatch] = useStateValue();
-
+    const [pageSize, setPageSize] = useState();
     //TODO IMPLEMENT IMAGE LIST BUTTON FUNCTIONALITIES
 
     const venuePageBool = location.pathname.match("venues")
