@@ -6,6 +6,7 @@ React Pwa Similar to Air BnB in concept but it is a platform that any usable spa
 ## Table of contents
 
 * [General info](#general-info)
+* [Figma Mockup](#figma-mockup)
 * [Technologies](#technologies)
 * [Setup](#setup)
 
@@ -13,6 +14,10 @@ React Pwa Similar to Air BnB in concept but it is a platform that any usable spa
 ## General info
 <p>This project, while based on an already established sharing platform model such as AirBnB's short term home rental. It takes the concept one step further 
   and commodifies any usable space that the HOST in question owns. The use cases that immediatley come to mind would be the renting of a parking lot for a multi-hour event </p>
+
+## Figma mockup
+
+
 
 ## Technologies
 Project is created with:
