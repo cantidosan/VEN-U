@@ -98,7 +98,7 @@ app.post('/login', function (req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if (err) { return next(err) }
         if (!user) { return res.json({ message: info.message }) }
-
+        delete user.password
         req.login(user, function (err) {
 
             if (err) {
@@ -110,8 +110,8 @@ app.post('/login', function (req, res, next) {
             res.json({
 
                 "session": req.session,
-                "user": req.user,
-                "sessionId": req.sessionID
+                "user": user,
+                "sessionId": req.sessionID,
 
             });
         })
@@ -395,7 +395,7 @@ app.get('/users/:username', (req, res) => {
         }
         else {
 
-            res.status(200).json(results.rows)
+            res.status(200).json(results.rows[0])
         }
     }
     )
@@ -473,9 +473,38 @@ app.get('/pictures/events/:event_id', (req, res) => {
 
     const { event_id } = req.params
 
+
     getEventPictureQuery = `SELECT pic_url FROM events_pictures WHERE event_id = $1 ;`
 
     pool.query(getEventPictureQuery, [event_id], (error, results) => {
+        if (error) {
+
+            res.status(500)
+            throw error
+        }
+        else {
+
+            res.status(200).json(results.rows)
+        }
+    })
+
+})
+app.post('/pictures/events/:event_id', (req, res) => {
+
+    const { event_id } = req.params
+    const { pic_url } = req.body.data
+    const is_active = true
+
+    insertEventPicturesQuery = `
+                                INSERT INTO events_pictures(
+                                    event_id,
+                                    pic_url,
+                                    is_active
+                                )
+                                VALUES($1,$2,$3)
+                                `
+
+    pool.query(insertEventPicturesQuery, [event_id, pic_url, is_active], (error, results) => {
         if (error) {
 
             res.status(500)
@@ -733,16 +762,19 @@ app.get('/venueIssues/:venue_id', (req, res) => {
 
 app.post('/events', (req, res) => {
 
-    const created_at = new Date();
+
+
     const {
         eventName,
         eventLocation,
         eventPrice,
+        eventType,
         startDate,
         startTime,
         duration,
         promotionalDetails,
         venue_id,
+        userId,
         is_active
     } = req.body
 
@@ -751,7 +783,6 @@ app.post('/events', (req, res) => {
                             name,
                             location,
                             bookee_id,
-                            created_at,
                             type,
                             entry_price,
                             start_date,
@@ -763,8 +794,9 @@ app.post('/events', (req, res) => {
                             
                         )
                         VALUES(
-                            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12
+                            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11
                         )
+                        returning *;
 
 
 
@@ -772,13 +804,15 @@ app.post('/events', (req, res) => {
     pool.query(postEventQuery, [
         eventName,
         eventLocation,
+        userId,
+        eventType,
         eventPrice,
         startDate,
-        startTime,
         duration,
+        startTime,
         promotionalDetails,
         venue_id,
-        isActive
+        is_active
 
     ],
         (error, results) => {
