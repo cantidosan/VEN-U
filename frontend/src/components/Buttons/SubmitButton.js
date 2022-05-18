@@ -7,6 +7,8 @@ export default function SubmitButton(props) {
     const [imageLink, setImageLink] = useState([]);
     const [eventId, setEventId] = useState([]);
     const [userInfo, setUserInfo] = useState([]);
+
+
     console.log(eventId)
 
     let navigate = useNavigate();

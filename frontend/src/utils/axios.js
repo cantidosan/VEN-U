@@ -8,7 +8,7 @@ export default axios.create({
     baseURL: 'http://venu.com.local:3001',
     timeout: 1000,
     headers: {
-        'x-access-token': sessionId,
+        // 'x-access-token': sessionId,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
     }

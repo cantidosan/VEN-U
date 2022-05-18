@@ -25,7 +25,7 @@ export default function UploadButton(props) {
     console.log('userId', userId)
 
     const [imageSelected, setImageSelected] = useState([])
-    // console.log('image selected', imageSelected)
+    console.log('image selected', imageSelected)
     console.log('venueId ', venueId)
 
     useEffect(() => {
@@ -94,9 +94,10 @@ export default function UploadButton(props) {
 
     const handleUpload = async () => {
 
-        const { id } = userId[0]
+        // console.log('userIdddd', userId.id)
+        // const [host_id] = userId.id
 
-        console.log('id', id)
+        // console.log('id', host_id)
         // FORM DATA TO DB THEN WITH ID RETURNED PICTURE DATA TO WEBHOST AND WITH URL RETURN POST URL AND ID TO RESPECTIVE DB TABLES
 
         // });
@@ -107,7 +108,7 @@ export default function UploadButton(props) {
                     "venueName": venueName,
                     "venueLocation": venueLocation,
                     "venuePrice": venuePrice,
-                    "host_id": id,
+                    "host_id": userId.id,
                     "is_active": isActive
                 }
             })
@@ -140,7 +141,7 @@ export default function UploadButton(props) {
         const formData = new FormData();
         formData.append("file", imageSelected)
         formData.append("upload_preset", "qbjfqx59")
-
+        console.log('form data', formData)
         const response = await fetch('https://api.cloudinary.com/v1_1/daydto7f1/auto/upload', {
 
             method: 'POST',
