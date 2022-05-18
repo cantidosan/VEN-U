@@ -24,35 +24,11 @@ React Pwa Similar to Air BnB in concept but it is a platform that any usable spa
 ## Technologies
 Project is created with:
 
-    * "@testing-library/jest-dom": "^5.16.3",
-    * "@testing-library/react": "^12.1.4",
-    * "@testing-library/user-event": "^13.5.0",
-    * "axios": "^0.27.2",
-    * "bootstrap": "^5.1.3",
-    * "date-fns": "^2.28.0",
-    * "mapbox-gl": "^2.8.0",
-    * "react": "^18.0.0",
-    * "react-bootstrap": "^2.2.3",
-    * "react-calendar": "^3.7.0",
-    * "react-dom": "^18.0.0",
-    * "react-router-dom": "^6.3.0",
-    * "bcrypt": "^5.0.1",
-    * "body": "^5.1.0",
-    * "body-parser": "^1.20.0",
-    * "connect-pg-simple": "^7.0.0",
-    * "cookie-parser": "^1.4.6",
-    * "cors": "^2.8.5",
-    * "express": "^4.17.3",
-    * "express-flash": "^0.0.2",
-    * "express-session": "^1.17.2",
-    * "multer": "^1.4.4",
-    * "parser": "^0.1.4",
-    * "passport": "^0.5.2",
-    * "passport-local": "^1.0.0",
-    * "pg": "^8.7.3"
-
+![CLOUDINARY](https://user-images.githubusercontent.com/82469261/169048939-1c2b6e3f-c946-41a4-8788-0f18d7524ff4.png =250x250)
+  
 
 ## Setup
+
 
 ```
 $ cd ../Ven-u
