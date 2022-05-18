@@ -22,37 +22,21 @@ React Pwa Similar to Air BnB in concept but it is a platform that any usable spa
 
 
 ## Technologies
-Project is created with:
 
-    * "@testing-library/jest-dom": "^5.16.3",
-    * "@testing-library/react": "^12.1.4",
-    * "@testing-library/user-event": "^13.5.0",
-    * "axios": "^0.27.2",
-    * "bootstrap": "^5.1.3",
-    * "date-fns": "^2.28.0",
-    * "mapbox-gl": "^2.8.0",
-    * "react": "^18.0.0",
-    * "react-bootstrap": "^2.2.3",
-    * "react-calendar": "^3.7.0",
-    * "react-dom": "^18.0.0",
-    * "react-router-dom": "^6.3.0",
-    * "bcrypt": "^5.0.1",
-    * "body": "^5.1.0",
-    * "body-parser": "^1.20.0",
-    * "connect-pg-simple": "^7.0.0",
-    * "cookie-parser": "^1.4.6",
-    * "cors": "^2.8.5",
-    * "express": "^4.17.3",
-    * "express-flash": "^0.0.2",
-    * "express-session": "^1.17.2",
-    * "multer": "^1.4.4",
-    * "parser": "^0.1.4",
-    * "passport": "^0.5.2",
-    * "passport-local": "^1.0.0",
-    * "pg": "^8.7.3"
+![CLOUDINARY](https://user-images.githubusercontent.com/82469261/169048939-1c2b6e3f-c946-41a4-8788-0f18d7524ff4.png)
 
+![docker](https://user-images.githubusercontent.com/82469261/169049656-891e878f-ef81-43da-9f8b-c464f5785de2.png)
+![pngegg](https://user-images.githubusercontent.com/82469261/169049842-ef5d3afe-e275-487b-bae5-da62b2073449.png)
+
+![react](https://user-images.githubusercontent.com/82469261/169049942-fed49fc8-0ca5-48d8-a369-f97f230d8a16.png)
+
+![postgres](https://user-images.githubusercontent.com/82469261/169049951-1284c82d-862f-46d8-a9e5-19b092d4aa09.png)
+![bootstrap](https://user-images.githubusercontent.com/82469261/169049967-3686cc94-3071-49d3-8346-765ccba53281.png)
+![PngItem_3463674](https://user-images.githubusercontent.com/82469261/169049980-2c845d02-dca4-448a-9411-fe7ae69bd110.png)
 
 ## Setup
+
+
 
 ```
 $ cd ../Ven-u
