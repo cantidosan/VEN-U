@@ -43,6 +43,7 @@ export default function LoginPage() {
         const response = await res.json();
 
         const { user, session, sessionId, id } = response;
+
         const { user_type } = user;
         // const { sessionId } = response.sessionID
 

@@ -766,7 +766,7 @@ app.post('/events', (req, res) => {
 
     const {
         eventName,
-        eventLocation,
+        venueInfo,
         eventPrice,
         eventType,
         startDate,
@@ -775,9 +775,19 @@ app.post('/events', (req, res) => {
         promotionalDetails,
         venue_id,
         userId,
-        is_active
-    } = req.body
+        isActive
+    } = req.body.data
 
+
+    const {
+
+        location,
+
+
+    } = venueInfo
+
+    console.log('location', location)
+    console.log('bookeeid', userId)
     postEventQuery = `INSERT INTO events
                         (
                             name,
@@ -803,7 +813,7 @@ app.post('/events', (req, res) => {
                     `
     pool.query(postEventQuery, [
         eventName,
-        eventLocation,
+        location,
         userId,
         eventType,
         eventPrice,
@@ -812,7 +822,7 @@ app.post('/events', (req, res) => {
         startTime,
         promotionalDetails,
         venue_id,
-        is_active
+        isActive
 
     ],
         (error, results) => {

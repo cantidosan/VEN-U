@@ -7,13 +7,15 @@ export default function SubmitButton(props) {
     const [imageLink, setImageLink] = useState([]);
     const [eventId, setEventId] = useState([]);
     const [userInfo, setUserInfo] = useState([]);
-
+    const [venueInfo, setVenueInfo] = useState([])
 
     console.log(eventId)
+    console.log(venueInfo)
 
     let navigate = useNavigate();
 
     const {
+
         imageSelected,
         eventName,
         eventLocation,
@@ -26,30 +28,37 @@ export default function SubmitButton(props) {
         venue_id,
         isActive,
         userId
+
     } = props
+
+
 
     const formData = new FormData();
     formData.append("file", imageSelected)
     formData.append("upload_preset", "qbjfqx59")
+    // TODO BREAK UP BELOW INTO CUSTOM HOOKS
 
     useEffect(() => {
 
-        axios.post('/events', {
-            data: {
-                eventName,
-                eventLocation,
-                eventPrice,
-                startDate,
-                startTime,
-                duration,
-                userId,
-                eventType,
-                promotionalDetails,
-                venue_id,
-                isActive,
+        axios.get(`/venues/${venue_id}`)
+            .then((response) => setVenueInfo(response))
+            .then(axios.post('/events', {
+                data:
+                {
+                    eventName,
+                    venueInfo,
+                    eventPrice,
+                    startDate,
+                    startTime,
+                    duration,
+                    userId,
+                    eventType,
+                    promotionalDetails,
+                    venue_id,
+                    isActive,
 
-            }
-        })
+                }
+            }))
             .then((response) => setEventId(response.data.id))
             .then(axios.post('https://api.cloudinary.com/v1_1/daydto7f1/auto/upload', {
 

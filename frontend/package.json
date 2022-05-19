@@ -43,7 +43,12 @@
     ]
   },
   "devDependencies": {
-    "miragejs": "^0.1.43"
+    "@babel/preset-env": "^7.17.12",
+    "@babel/preset-react": "^7.17.12",
+    "babel-jest": "^28.1.0",
+    "jest": "^28.1.0",
+    "miragejs": "^0.1.43",
+    "react-test-renderer": "^18.1.0"
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
