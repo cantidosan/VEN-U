@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { DropdownButton, ButtonGroup, Dropdown } from 'react-bootstrap'
 import { useStateValue } from '../state';
-import AmenityOptionsList from './AmenityOptionsList'
+import AmenityOptionsList from '../components/AmenityOptionsLIst/AmenityOptionsList'
 import DisplayAmenityOptions from './DisplayAmenityOptions/DisplayAmenityOptions'
 import { useLocation } from 'react-router-dom'
 

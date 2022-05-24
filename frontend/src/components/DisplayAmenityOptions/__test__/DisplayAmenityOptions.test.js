@@ -21,4 +21,4 @@ describe('DisplayAmenityOptions', () => {
             expect(button).toBeInTheDocument();
         });
     });
-}
+});

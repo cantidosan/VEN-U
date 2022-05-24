@@ -5,7 +5,7 @@ import BookeeInputForm from '../components/BookeeInputForm'
 import PageLayout from '../components/layout/PageLayout'
 import { Container } from 'react-bootstrap'
 import UploadImages from '../components/UploadImages'
-import AmenityOptionsList from '../components/AmenityOptionsList'
+import AmenityOptionsList from '../components/AmenityOptionsLIst/AmenityOptionsList'
 import { useStateValue } from '../state';
 import setHeaders from '../setHeaders'
 import AmenitiesSetup from '../components/AmenitiesSetup'
